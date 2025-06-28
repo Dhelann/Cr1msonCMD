@@ -8,24 +8,19 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{
 font-family:Georgia,serif;
-color:#000;
+color:red;
 text-align:center;
 min-height:100vh;
-background:linear-gradient(135deg,#ffe3ec,#c6f0ff);
-background-size:400% 400%;
-animation:gradientShift 15s ease infinite;
-padding:20px
-}
-@keyframes gradientShift{
-0%{background-position:0% 50%}
-50%{background-position:100% 50%}
-100%{background-position:0% 50%}
+background:black;
+overflow:hidden;
+padding:20px;
+position:relative
 }
 .loader{
 position:fixed;
 width:100vw;
 height:100vh;
-background:#fff;
+background:black;
 display:flex;
 align-items:center;
 justify-content:center;
@@ -35,6 +30,7 @@ animation:fadeOut 1.2s ease 2.5s forwards
 .loader span{
 font-size:2em;
 font-weight:400;
+color:red;
 animation:bounce 1.6s infinite
 }
 @keyframes bounce{
@@ -56,14 +52,15 @@ to{opacity:1}
 h1{
 font-size:3.5em;
 margin-bottom:14px;
-color:#000;
-text-shadow:3px 3px 10px rgba(0,0,0,0.1)
+color:red;
+text-shadow:3px 3px 10px rgba(255,0,0,0.2)
 }
 .subtext{
 font-size:1.25em;
 margin-bottom:30px;
 opacity:0;
-animation:fadeInText 2s ease 3s forwards
+animation:fadeInText 2s ease 3s forwards;
+color:red
 }
 @keyframes fadeInText{
 to{opacity:1}
@@ -72,23 +69,21 @@ to{opacity:1}
 margin:30px auto;
 width:95%;
 max-width:90%;
-background:rgba(255,255,255,0.85);
-border:3px solid #000;
+background:rgba(0,0,0,0.7);
+border:3px solid red;
 padding:30px 36px;
 border-radius:24px;
-box-shadow:0 14px 28px rgba(0,0,0,0.25);
+box-shadow:0 14px 28px rgba(255,0,0,0.3);
 transition:transform 0.4s ease,box-shadow 0.4s ease;
 backdrop-filter:blur(12px);
 transform-style:preserve-3d;
 animation:sectionLoop 2s ease-in-out infinite alternate;
+color:red
 }
 @keyframes sectionLoop {
-0%{transform:scale(1) rotateX(0deg) rotateY(0deg);box-shadow:0 14px 28px rgba(0,0,0,0.25)}
-100%{transform:scale(1.03) rotateX(0.5deg) rotateY(1deg);box-shadow:0 24px 50px rgba(0,0,0,0.3)}
+0%{transform:scale(1) rotateX(0deg) rotateY(0deg);box-shadow:0 14px 28px rgba(255,0,0,0.25)}
+100%{transform:scale(1.03) rotateX(0.5deg) rotateY(1deg);box-shadow:0 24px 50px rgba(255,0,0,0.4)}
 }
-.section:nth-of-type(1){animation-delay:0s}
-.section:nth-of-type(2){animation-delay:5s}
-.section:nth-of-type(3){animation-delay:10s}
 .links-buttons{
 display:flex;
 justify-content:center;
@@ -99,8 +94,8 @@ flex-wrap:wrap
 .link-btn,
 .copy-btn{
 padding:14px 28px;
-background:#000;
-color:#fff;
+background:red;
+color:black;
 border:none;
 border-radius:14px;
 text-decoration:none;
@@ -108,42 +103,23 @@ font-size:1.15em;
 font-family:Georgia,serif;
 font-weight:600;
 transition:all 0.35s ease;
-box-shadow:0 8px 18px rgba(0,0,0,0.25);
+box-shadow:0 8px 18px rgba(255,0,0,0.25);
 position:relative;
 overflow:hidden;
 cursor:pointer
-}
-.link-btn::before,
-.copy-btn::before{
-content:"";
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(255,255,255,0.12);
-transform:scaleX(0);
-transform-origin:left;
-transition:transform 0.4s ease
-}
-.link-btn:hover::before,
-.copy-btn:hover::before{
-transform:scaleX(1)
 }
 .link-btn:hover,
 .copy-btn:hover{
 transform:translateY(-3px)
 }
-.link-btn.scriptblox{background:#000}
-.link-btn.github{background:#111}
 .copy-box{display:none}
 .toast{
 position:fixed;
 bottom:24px;
 left:50%;
 transform:translateX(-50%);
-background:#000;
-color:#fff;
+background:red;
+color:black;
 padding:14px 22px;
 border-radius:16px;
 font-family:Georgia,serif;
@@ -152,18 +128,26 @@ opacity:0;
 pointer-events:none;
 transition:opacity 0.5s ease;
 z-index:10000;
-box-shadow:0 6px 14px rgba(0,0,0,0.3)
+box-shadow:0 6px 14px rgba(255,0,0,0.3)
 }
 .toast.show{
 opacity:1;
 pointer-events:auto
 }
-@media(max-width:600px){
-h1{font-size:2.4em}
-.section{padding:24px}
-.subtext{font-size:1em}
-.links-buttons{flex-direction:column;gap:14px}
-.link-btn,.copy-btn{width:100%;justify-content:center}
+.ammo{
+position:absolute;
+width:12px;
+height:30px;
+background:gold;
+border:2px solid red;
+border-radius:4px;
+top:-40px;
+animation:fall 5s linear infinite;
+opacity:0.85
+}
+@keyframes fall {
+0%{transform:translateY(0);opacity:1}
+100%{transform:translateY(120vh);opacity:0}
 }
 </style>
 </head>
@@ -204,6 +188,18 @@ toast.classList.add("show")
 setTimeout(()=>{toast.classList.remove("show")},2000)
 })
 }
+
+function spawnAmmo(){
+for(let i=0;i<10;i++){
+let ammo=document.createElement("div")
+ammo.className="ammo"
+ammo.style.left=Math.random()*100+"vw"
+ammo.style.animationDuration=(4+Math.random()*3)+"s"
+document.body.appendChild(ammo)
+setTimeout(()=>{ammo.remove()},7000)
+}
+}
+setInterval(spawnAmmo,500)
 </script>
 </body>
-  </html>
+</html>
