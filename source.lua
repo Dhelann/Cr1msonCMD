@@ -50,71 +50,57 @@ if txt==""then return end
 local args={}for word in txt:gmatch("%S+")do table.insert(args,word)end
 local cmd=args[1]and args[1]:lower()or""
 if cmd=="wasdfly"then
-if cmd=="wasdfly"then
 local state=trollFlyStates.wasdfly
 if state.active then return end
 state.active=true
-local SPEED=50
+local SPEED=1
+local TELEPORT_FLY=false
+local USE_QE=true
 local lp=Players.LocalPlayer
+local mouse=lp:GetMouse()
 local cam=workspace.CurrentCamera
 local root=lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")
-if not root then repeat task.wait() until lp.Character and lp.Character:FindFirstChild("HumanoidRootPart") root=lp.Character:FindFirstChild("HumanoidRootPart") end
-local control={w=0,s=0,a=0,d=0,q=0,e=0}
+if not root then repeat task.wait()until lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")root=lp.Character:FindFirstChild("HumanoidRootPart")end
+local control={F=0,B=0,L=0,R=0,Q=0,E=0}
+local flySpeed=0
 state.bg=Instance.new("BodyGyro",root)state.bg.P=9e4 state.bg.MaxTorque=Vector3.new(9e9,9e9,9e9)state.bg.CFrame=root.CFrame
 state.bv=Instance.new("BodyVelocity",root)state.bv.Velocity=Vector3.zero state.bv.MaxForce=Vector3.new(9e9,9e9,9e9)
-local function getDir()
-local forward=(control.w-control.s)
-local right=(control.d-control.a)
-local up=(control.e-control.q)
-local move=Vector3.new()
-move=move+cam.CFrame.LookVector*forward
-move=move+cam.CFrame.RightVector*right
-move=move+cam.CFrame.UpVector*up
-if move.Magnitude>0 then move=move.Unit end
-return move
-end
-state.inputBegan=UIS.InputBegan:Connect(function(input,gpe)
-if gpe then return end
-if input.KeyCode==Enum.KeyCode.W then control.w=1 end
-if input.KeyCode==Enum.KeyCode.S then control.s=1 end
-if input.KeyCode==Enum.KeyCode.A then control.a=1 end
-if input.KeyCode==Enum.KeyCode.D then control.d=1 end
-if input.KeyCode==Enum.KeyCode.E then control.e=1 end
-if input.KeyCode==Enum.KeyCode.Q then control.q=1 end
-end)
-state.inputEnded=UIS.InputEnded:Connect(function(input,gpe)
-if input.KeyCode==Enum.KeyCode.W then control.w=0 end
-if input.KeyCode==Enum.KeyCode.S then control.s=0 end
-if input.KeyCode==Enum.KeyCode.A then control.a=0 end
-if input.KeyCode==Enum.KeyCode.D then control.d=0 end
-if input.KeyCode==Enum.KeyCode.E then control.e=0 end
-if input.KeyCode==Enum.KeyCode.Q then control.q=0 end
-end)
 local function flyLoop()
 while state.active do
 task.wait()
 local hum=lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
 if hum then hum.PlatformStand=true end
-local dir=getDir()
-state.bv.Velocity=dir*SPEED
+if control.L+control.R~=0 or control.F+control.B~=0 or control.Q+control.E~=0 then flySpeed=50 else flySpeed=0 end
+local dir=Vector3.zero
+dir=dir+cam.CFrame.LookVector*(control.F+control.B)
+dir=dir+((cam.CFrame*CFrame.new(control.L+control.R,(control.Q+control.E)*0.2,0)).p-cam.CFrame.p)
+state.bv.Velocity=dir*flySpeed
 state.bg.CFrame=cam.CFrame
+if TELEPORT_FLY and state.bv.Velocity.Magnitude>1 then root.CFrame=root.CFrame+state.bv.Velocity*task.wait()end
 end
 if state.bv then state.bv:Destroy()end
 if state.bg then state.bg:Destroy()end
 local hum=lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
 if hum then hum.PlatformStand=false end
 end
+state.conn1=mouse.KeyDown:Connect(function(k)
+local s=SPEED
+if k=="w"then control.F=s end
+if k=="s"then control.B=-s end
+if k=="a"then control.L=-s end
+if k=="d"then control.R=s end
+if USE_QE and k=="q"then control.E=-s*2 end
+if USE_QE and k=="e"then control.Q=s*2 end
+end)
+state.conn2=mouse.KeyUp:Connect(function(k)
+if k=="w"then control.F=0 end
+if k=="s"then control.B=0 end
+if k=="a"then control.L=0 end
+if k=="d"then control.R=0 end
+if k=="q"then control.E=0 end
+if k=="e"then control.Q=0 end
+end)
 task.spawn(flyLoop)
-state.disconnect=function()
-state.active=false
-if state.bv then state.bv:Destroy()end
-if state.bg then state.bg:Destroy()end
-if state.inputBegan then state.inputBegan:Disconnect()end
-if state.inputEnded then state.inputEnded:Disconnect()end
-local hum=lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
-if hum then hum.PlatformStand=false end
-end
-end
 elseif cmd=="lay"then
 local layPlr=Players.LocalPlayer
 local layChar=layPlr.Character or layPlr.CharacterAdded:Wait()
@@ -199,7 +185,15 @@ if hum then hum.PlatformStand=true end
 if TELEPORT_FLY and vel.Magnitude>1 then root.CFrame=root.CFrame+vel*RunService.RenderStepped:Wait()end end)
 elseif cmd=="unfly"then
 local state=trollFlyStates.wasdfly
-if state.active and state.disconnect then state.disconnect() end
+if state.active then
+state.active=false
+if state.bv then state.bv:Destroy()end
+if state.bg then state.bg:Destroy()end
+if state.conn1 then state.conn1:Disconnect()end
+if state.conn2 then state.conn2:Disconnect()end
+local hum=LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+if hum then hum.PlatformStand=false end
+end
 local mstate=trollFlyStates.mfly
 if mstate.active then
 mstate.active=false
@@ -208,7 +202,6 @@ if mstate.bg then mstate.bg:Destroy()end
 if mstate.renderConn then mstate.renderConn:Disconnect()end
 local hum=LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
 if hum then hum.PlatformStand=false end end
-end
 elseif cmd=="antifling"then
 local afChar=LocalPlayer.Character
 if afChar then
@@ -291,10 +284,10 @@ elseif cmd=="fullbright"then Lighting.Brightness=10 Lighting.ClockTime=12 Lighti
 elseif cmd=="unfullbright"then Lighting.Brightness=2 Lighting.ClockTime=14 Lighting.FogEnd=1000 Lighting.GlobalShadows=true Lighting.OutdoorAmbient=Color3.fromRGB(128,128,128)
 elseif cmd=="esp"then getgenv().TrollWareESP()
 elseif cmd=="unesp"then getgenv().unTrollWareESP()
-elseif cmd=="antiafk"then for _,v in pairs(getconnections(Players.LocalPlayer.Idled))do v:Disable()end  
+elseif cmd=="antiafk"then for _,v in pairs(getconnections(Players.LocalPlayer.Idled))do v:Disable()end
 else
 local s,f=pcall(function()return loadstring(txt)end)
 if s and typeof(f)=="function"then pcall(f)end end end
 Players.LocalPlayer.Chatted:Connect(function(msg)if msg:sub(1,1)==";"then runCommand(msg:sub(2))end end)
-pcall(function()loadstring(game:HttpGet("https://raw.githubusercontent.com/Dhelann/OfficialTrollWare/refs/heads/main/loader.lua"))()end)
+pcall(function()loadstring(game:HttpGet("https://raw.githubusercontent.com/Dhelannn/OfficialTrollWare/refs/heads/main/loader.lua"))()end)
 end
