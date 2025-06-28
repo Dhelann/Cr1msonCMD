@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TrollWare FE</title>
+<title>Project Cr1mson</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{
@@ -44,9 +44,7 @@ to{opacity:0;visibility:hidden}
 opacity:0;
 animation:fadeIn 1.5s ease-in-out 2.7s forwards;
 max-width:1000px;
-margin:auto;
-position:relative;
-z-index:10
+margin:auto
 }
 @keyframes fadeIn{
 to{opacity:1}
@@ -108,8 +106,7 @@ transition:all 0.35s ease;
 box-shadow:0 8px 18px rgba(255,0,0,0.25);
 position:relative;
 overflow:hidden;
-cursor:pointer;
-z-index:10
+cursor:pointer
 }
 .link-btn:hover,
 .copy-btn:hover{
@@ -137,39 +134,23 @@ box-shadow:0 6px 14px rgba(255,0,0,0.3)
 opacity:1;
 pointer-events:auto
 }
-.ammo{
-position:absolute;
-width:12px;
-height:30px;
-background:linear-gradient(to top, red 50%, gold 50%);
-border:2px solid red;
-border-radius:4px;
-top:-40px;
-z-index:1;
-animation:fall 6s ease-in infinite;
-opacity:0.9;
-}
-@keyframes fall {
-0%{transform:translateY(0);opacity:1}
-100%{transform:translateY(120vh);opacity:0}
-}
 </style>
 </head>
 <body>
 <div class="loader"><span>...</span></div>
 <div class="toast" id="toast">Copied to clipboard! ♡</div>
 <div class="content">
-<h1>TrollWare FE</h1>
+<h1>Project Cr1mson</h1>
 <p class="subtext">With plenty commands already built-in and more to come, this script is only getting better.</p>
 
 <div class="section">
-<p><strong>TrollWare FE is a Universal FE Admin script made for Trolling and Chaos.</strong></p>
+<p><strong>Project Crimson is a Universal FE Admin script made for Trolling and Chaos.</strong></p>
 </div>
 <div class="section">
-<p><strong>It is Powered with tons of useful and fun commands already built-in.</strong></p>
+<p><strong>Built with tons of Powerful Commands.</strong></p>
 </div>
 <div class="section">
-<p><strong>Brought to life by Dhelan and xlox262, this high-quality Lua script feels like a paid product but it’s completely free.</strong></p>
+<p><strong>Brought to life by Dhelan and xlox262.</strong></p>
 </div>
 
 <div class="copy-box" id="scriptText">loadstring(game:HttpGet("https://raw.githubusercontent.com/Dhelannn/TrollWare/refs/heads/main/source.lua"))()</div>
@@ -180,7 +161,7 @@ opacity:0.9;
 <button class="copy-btn" onclick="copyScript()">Copy Script</button>
 </div>
 
-<p class="subtext" style="margin-top:40px;">TrollWare FE Script is currently up:)</p>
+<p class="subtext" style="margin-top:40px;">Project Crimson FE Script is currently up:)</p>
 </div>
 
 <script>
@@ -192,18 +173,6 @@ toast.classList.add("show")
 setTimeout(()=>{toast.classList.remove("show")},2000)
 })
 }
-
-function spawnAmmo(){
-for(let i=0;i<10;i++){
-let ammo=document.createElement("div")
-ammo.className="ammo"
-ammo.style.left=Math.random()*100+"vw"
-ammo.style.animationDuration=(5+Math.random()*4)+"s"
-document.body.appendChild(ammo)
-setTimeout(()=>{ammo.remove()},10000)
-}
-}
-setInterval(spawnAmmo,600)
 </script>
 </body>
 </html>
