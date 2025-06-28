@@ -49,58 +49,75 @@ local function runCommand(txt)
 if txt==""then return end
 local args={}for word in txt:gmatch("%S+")do table.insert(args,word)end
 local cmd=args[1]and args[1]:lower()or""
-if cmd=="wasdfly"then
-local state=cr1mFlyStates.wasdfly
-if state.active then return end
-state.active=true
+if cmd=="fly"then
+if cr1mFlyStates.fly and cr1mFlyStates.fly.active then return end
+local state={active=true,bg=nil,bv=nil,renderConn=nil,conn1=nil,conn2=nil}
+cr1mFlyStates.fly=state
 local SPEED=1
-local TELEPORT_FLY=false
-local USE_QE=true
 local lp=Players.LocalPlayer
-local mouse=lp:GetMouse()
 local cam=workspace.CurrentCamera
-local root=lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")
-if not root then repeat task.wait()until lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")root=lp.Character:FindFirstChild("HumanoidRootPart")end
+local root=lp.Character and (lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso"))
+if not root then repeat task.wait()until lp.Character and (lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso"))root=lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso")end
+state.bg=Instance.new("BodyGyro",root)
+state.bg.P=9e4
+state.bg.MaxTorque=Vector3.new(9e9,9e9,9e9)
+state.bg.CFrame=root.CFrame
+state.bv=Instance.new("BodyVelocity",root)
+state.bv.Velocity=Vector3.zero
+state.bv.MaxForce=Vector3.new(9e9,9e9,9e9)
 local control={F=0,B=0,L=0,R=0,Q=0,E=0}
-local flySpeed=0
-state.bg=Instance.new("BodyGyro",root)state.bg.P=9e4 state.bg.MaxTorque=Vector3.new(9e9,9e9,9e9)state.bg.CFrame=root.CFrame
-state.bv=Instance.new("BodyVelocity",root)state.bv.Velocity=Vector3.zero state.bv.MaxForce=Vector3.new(9e9,9e9,9e9)
-local function flyLoop()
-while state.active do
-task.wait()
-local hum=lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
-if hum then hum.PlatformStand=true end
-if control.L+control.R~=0 or control.F+control.B~=0 or control.Q+control.E~=0 then flySpeed=50 else flySpeed=0 end
-local dir=Vector3.zero
-dir=dir+cam.CFrame.LookVector*(control.F+control.B)
-dir=dir+((cam.CFrame*CFrame.new(control.L+control.R,(control.Q+control.E)*0.2,0)).p-cam.CFrame.p)
+state.conn1=UIS.InputBegan:Connect(function(input,gpe)
+if gpe then return end
+if input.KeyCode==Enum.KeyCode.W then control.F=SPEED end
+if input.KeyCode==Enum.KeyCode.S then control.B=-SPEED end
+if input.KeyCode==Enum.KeyCode.A then control.L=-SPEED end
+if input.KeyCode==Enum.KeyCode.D then control.R=SPEED end
+if input.KeyCode==Enum.KeyCode.Q then control.E=-SPEED*2 end
+if input.KeyCode==Enum.KeyCode.E then control.Q=SPEED*2 end
+end)
+state.conn2=UIS.InputEnded:Connect(function(input)
+if input.KeyCode==Enum.KeyCode.W then control.F=0 end
+if input.KeyCode==Enum.KeyCode.S then control.B=0 end
+if input.KeyCode==Enum.KeyCode.A then control.L=0 end
+if input.KeyCode==Enum.KeyCode.D then control.R=0 end
+if input.KeyCode==Enum.KeyCode.Q then control.E=0 end
+if input.KeyCode==Enum.KeyCode.E then control.Q=0 end
+end)
+local ctrlMod
+pcall(function()
+ctrlMod=require(lp.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule"))
+end)
+state.renderConn=RunService.RenderStepped:Connect(function()
+if not state.active then return end
+local moveVec=Vector3.zero
+if ctrlMod then moveVec=ctrlMod:GetMoveVector()end
+local joyDir=Vector3.zero
+if moveVec.Magnitude>0 then joyDir=cam.CFrame.RightVector*moveVec.X+cam.CFrame.LookVector*-moveVec.Z end
+local keyDir=Vector3.zero
+keyDir=keyDir+cam.CFrame.LookVector*(control.F+control.B)
+keyDir=keyDir+cam.CFrame.RightVector*(control.L+control.R)
+keyDir=keyDir+cam.CFrame.UpVector*((control.Q+control.E)*0.5)
+local dir=joyDir+keyDir
+local mag=dir.Magnitude
+local flySpeed=(mag>0)and 50 or 0
+if mag>0 then dir=dir.Unit end
 state.bv.Velocity=dir*flySpeed
 state.bg.CFrame=cam.CFrame
-if TELEPORT_FLY and state.bv.Velocity.Magnitude>1 then root.CFrame=root.CFrame+state.bv.Velocity*task.wait()end
-end
-if state.bv then state.bv:Destroy()end
-if state.bg then state.bg:Destroy()end
 local hum=lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
+if hum then hum.PlatformStand=state.active end
+end)
+elseif cmd=="unfly"then
+local state=cr1mFlyStates.fly
+if state and state.active then
+state.active=false
+if state.bv then state.bv:Destroy()state.bv=nil end
+if state.bg then state.bg:Destroy()state.bg=nil end
+if state.renderConn then state.renderConn:Disconnect()state.renderConn=nil end
+if state.conn1 then state.conn1:Disconnect()state.conn1=nil end
+if state.conn2 then state.conn2:Disconnect()state.conn2=nil end
+local hum=LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
 if hum then hum.PlatformStand=false end
 end
-state.conn1=mouse.KeyDown:Connect(function(k)
-local s=SPEED
-if k=="w"then control.F=s end
-if k=="s"then control.B=-s end
-if k=="a"then control.L=-s end
-if k=="d"then control.R=s end
-if USE_QE and k=="q"then control.E=-s*2 end
-if USE_QE and k=="e"then control.Q=s*2 end
-end)
-state.conn2=mouse.KeyUp:Connect(function(k)
-if k=="w"then control.F=0 end
-if k=="s"then control.B=0 end
-if k=="a"then control.L=0 end
-if k=="d"then control.R=0 end
-if k=="q"then control.E=0 end
-if k=="e"then control.Q=0 end
-end)
-task.spawn(flyLoop)
 elseif cmd=="lay"then
 local layPlr=Players.LocalPlayer
 local layChar=layPlr.Character or layPlr.CharacterAdded:Wait()
@@ -156,52 +173,7 @@ local tgt=findTgt(tgtName)
 if tgt and tgt.Character and tgt.Character:FindFirstChild("HumanoidRootPart")then
 local hrp=LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 if hrp then hrp.CFrame=tgt.Character.HumanoidRootPart.CFrame+Vector3.new(0,3,0)end end end
-elseif cmd=="mfly"then
-local state=cr1mFlyStates.mfly
-if state.active then return end
-state.active=true
-local TELEPORT_FLY=false
-local SPEED=1
-local lp=Players.LocalPlayer
-local function getRoot(char)
-return char:FindFirstChild("HumanoidRootPart")or char:FindFirstChild("UpperTorso")or char:FindFirstChild("Torso")end
-local root=getRoot(lp.Character)
-local cam=workspace.CurrentCamera
-state.bv=Instance.new("BodyVelocity",root)state.bv.MaxForce=Vector3.new(9e9,9e9,9e9)state.bv.Velocity=Vector3.zero
-state.bg=Instance.new("BodyGyro",root)state.bg.MaxTorque=Vector3.new(9e9,9e9,9e9)state.bg.P=1000 state.bg.D=50
-local ctrlMod=require(lp.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule"))
-state.renderConn=RunService.RenderStepped:Connect(function()
-if not state.active then return end
-local moveVec=ctrlMod:GetMoveVector()
-local speed=SPEED*50
-local vel=Vector3.zero
-vel=vel+cam.CFrame.RightVector*moveVec.X*speed
-vel=vel-cam.CFrame.LookVector*moveVec.Z*speed
-state.bv.MaxForce=Vector3.new(9e9,9e9,9e9)
-state.bv.Velocity=vel
-state.bg.CFrame=cam.CFrame
-local hum=lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
-if hum then hum.PlatformStand=true end
-if TELEPORT_FLY and vel.Magnitude>1 then root.CFrame=root.CFrame+vel*RunService.RenderStepped:Wait()end end)
-elseif cmd=="unfly"then
-local state=cr1mFlyStates.wasdfly
-if state.active then
-state.active=false
-if state.bv then state.bv:Destroy()end
-if state.bg then state.bg:Destroy()end
-if state.conn1 then state.conn1:Disconnect()end
-if state.conn2 then state.conn2:Disconnect()end
-local hum=LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-if hum then hum.PlatformStand=false end
-end
-local mstate=cr1mFlyStates.mfly
-if mstate.active then
-mstate.active=false
-if mstate.bv then mstate.bv:Destroy()end
-if mstate.bg then mstate.bg:Destroy()end
-if mstate.renderConn then mstate.renderConn:Disconnect()end
-local hum=LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-if hum then hum.PlatformStand=false end end
+
 elseif cmd=="antifling"then
 local afChar=LocalPlayer.Character
 if afChar then
