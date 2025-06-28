@@ -1,3 +1,3 @@
 >Check Official TrollWare Website for Information:
 
->https://dhelann.github.io/Official-TrollWare/
+>https://dhelann.github.io/TrollWare/
