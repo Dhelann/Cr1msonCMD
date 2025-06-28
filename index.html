@@ -6,6 +6,9 @@
 <title>Project Cr1mson</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
+html, body {
+  height: 100%;
+}
 body{
   font-family:Georgia,serif;
   color:red;
@@ -13,7 +16,8 @@ body{
   min-height:100vh;
   background:black;
   padding:20px;
-  position:relative
+  position:relative;
+  overflow-y:auto;
 }
 .loader{
 position:fixed;
@@ -52,14 +56,14 @@ h1{
 font-size:3.5em;
 margin-bottom:14px;
 color:red;
-text-shadow:3px 3px 10px rgba(255,0,0,0.2)
+text-shadow:none;
 }
 h2{
 font-size:2em;
 color:#ff5555;
 margin-bottom:10px;
 margin-top:10px;
-text-shadow:2px 2px 8px rgba(255,0,0,0.18)
+text-shadow:none;
 }
 .subtext{
 font-size:1.25em;
@@ -79,7 +83,7 @@ background:rgba(0,0,0,0.7);
 border:3px solid red;
 padding:30px 36px;
 border-radius:24px;
-box-shadow:0 14px 28px rgba(255,0,0,0.3);
+box-shadow:none;
 transition:transform 0.4s ease,box-shadow 0.4s ease;
 backdrop-filter:blur(12px);
 transform-style:preserve-3d;
@@ -87,8 +91,8 @@ animation:sectionLoop 2s ease-in-out infinite alternate;
 color:red
 }
 @keyframes sectionLoop{
-0%{transform:scale(1) rotateX(0deg) rotateY(0deg);box-shadow:0 14px 28px rgba(255,0,0,0.25)}
-100%{transform:scale(1.03) rotateX(0.5deg) rotateY(1deg);box-shadow:0 24px 50px rgba(255,0,0,0.4)}
+0%{transform:scale(1) rotateX(0deg) rotateY(0deg);}
+100%{transform:scale(1.03) rotateX(0.5deg) rotateY(1deg);}
 }
 .links-buttons{
 display:flex;
@@ -109,7 +113,7 @@ font-size:1.15em;
 font-family:Georgia,serif;
 font-weight:600;
 transition:all 0.35s ease;
-box-shadow:0 8px 18px rgba(255,0,0,0.25);
+box-shadow:none;
 position:relative;
 overflow:hidden;
 cursor:pointer
@@ -134,7 +138,7 @@ opacity:0;
 pointer-events:none;
 transition:opacity 0.5s ease;
 z-index:10000;
-box-shadow:0 6px 14px rgba(255,0,0,0.3)
+box-shadow:none;
 }
 .toast.show{
 opacity:1;
