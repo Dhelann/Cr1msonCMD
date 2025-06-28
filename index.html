@@ -7,14 +7,21 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{
-font-family:Georgia,serif;
-color:red;
-text-align:center;
-min-height:100vh;
-background:black;
-overflow:hidden;
-padding:20px;
-position:relative
+  font-family:Georgia,serif;
+  color:red;
+  text-align:center;
+  min-height:100vh;
+  background:linear-gradient(-45deg,#1a0000,#330000,#660000,#ff0000);
+  background-size:400% 400%;
+  animation:gradientBG 18s ease infinite;
+  overflow:hidden;
+  padding:20px;
+  position:relative
+}
+@keyframes gradientBG{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
 }
 .loader{
 position:fixed;
@@ -55,6 +62,13 @@ margin-bottom:14px;
 color:red;
 text-shadow:3px 3px 10px rgba(255,0,0,0.2)
 }
+h2{
+font-size:2em;
+color:#ff5555;
+margin-bottom:10px;
+margin-top:10px;
+text-shadow:2px 2px 8px rgba(255,0,0,0.18)
+}
 .subtext{
 font-size:1.25em;
 margin-bottom:30px;
@@ -80,7 +94,7 @@ transform-style:preserve-3d;
 animation:sectionLoop 2s ease-in-out infinite alternate;
 color:red
 }
-@keyframes sectionLoop {
+@keyframes sectionLoop{
 0%{transform:scale(1) rotateX(0deg) rotateY(0deg);box-shadow:0 14px 28px rgba(255,0,0,0.25)}
 100%{transform:scale(1.03) rotateX(0.5deg) rotateY(1deg);box-shadow:0 24px 50px rgba(255,0,0,0.4)}
 }
@@ -134,44 +148,97 @@ box-shadow:0 6px 14px rgba(255,0,0,0.3)
 opacity:1;
 pointer-events:auto
 }
+.feature-list,.faq-list{
+list-style:disc inside;
+padding-left:1em;
+margin-top:1em;
+margin-bottom:1em;
+text-align:left;
+color:#ff5555;
+margin:0 auto;
+max-width:600px;
+}
+.feature-list li,.faq-list li{margin-bottom:10px;}
 </style>
 </head>
 <body>
 <div class="loader"><span>...</span></div>
 <div class="toast" id="toast">Copied to clipboard.</div>
 <div class="content">
-<h1>Project Cr1mson</h1>
-<p class="subtext">With plenty commands already built-in and more to come, this script is only getting better.</p>
+  <h1>Project Cr1mson</h1>
+  <p class="subtext">With plenty commands already built-in and more to come, this script is only getting better.</p>
 
-<div class="section">
-<p><strong>A Universal FE Admin script made to cause Chaos.</strong></p>
-</div>
-<div class="section">
-<p><strong>Built with plenty of Useful and Powerful Commands.</strong></p>
-</div>
-<div class="section">
-<p><strong>Script Co-Created by two individuals named Dhelan and xlox262.</strong></p>
-</div>
+  <div class="section">
+    <p><strong>A Universal FE Admin script made to cause Chaos.</strong></p>
+  </div>
+  <div class="section">
+    <p><strong>Built with plenty of Useful and Powerful Commands.</strong></p>
+  </div>
+  <div class="section">
+    <p><strong>Script Co-Created by two individuals named Dhelan and xlox262.</strong></p>
+  </div>
 
-<div class="copy-box" id="scriptText">loadstring(game:HttpGet("https://raw.githubusercontent.com/Dhelannn/Project-Cr1mson/refs/heads/main/source.lua"))()</div>
+  <div class="section">
+    <h2>Features</h2>
+    <ul class="feature-list">
+      <li>Universal FE Admin script for Roblox</li>
+      <li>Plenty of built-in powerful commands</li>
+      <li>Easy-to-use interface</li>
+      <li>Regular updates and improvements</li>
+      <li>Open source and transparent</li>
+      <li>Script co-created by Dhelan and xlox262</li>
+    </ul>
+  </div>
 
-<div class="links-buttons">
-<a class="link-btn scriptblox" href="https://scriptblox.com/script/Universal-Script-Console-X-41895" target="_blank">ScriptBlox</a>
-<a class="link-btn github" href="https://github.com/Dhelann/Project-Cr1mson" target="_blank">GitHub</a>
-<button class="copy-btn" onclick="copyScript()">Script</button>
-</div>
+  <div class="section">
+    <h2>FAQ</h2>
+    <ul class="faq-list">
+      <li>
+        <strong>Q:</strong> How do I use the script?<br>
+        <strong>A:</strong> Copy the script using the "Script" button and run it in your Roblox executor.
+      </li>
+      <li>
+        <strong>Q:</strong> Is this script safe to use?<br>
+        <strong>A:</strong> The script is open source; review the code on GitHub for transparency.
+      </li>
+      <li>
+        <strong>Q:</strong> Who maintains this project?<br>
+        <strong>A:</strong> Dhelan and xlox262.
+      </li>
+      <li>
+        <strong>Q:</strong> How do I get updates?<br>
+        <strong>A:</strong> Always use the latest script from this site or our GitHub.
+      </li>
+    </ul>
+  </div>
 
-<p class="subtext" style="margin-top:40px;"></p>
+  <div class="section">
+    <h2>Feedback</h2>
+    <p>Found a bug or have a feature request?
+      <a href="https://github.com/Dhelann/Project-Cr1mson/issues/new/choose" target="_blank" style="color:#ff5555;text-decoration:underline;">Submit it here on GitHub</a>.
+    </p>
+  </div>
+
+  <div class="copy-box" id="scriptText">loadstring(game:HttpGet("https://raw.githubusercontent.com/Dhelann/Project-Cr1mson/refs/heads/main/source.lua"))()</div>
+
+  <div class="links-buttons">
+    <a class="link-btn scriptblox" href="https://scriptblox.com/script/Universal-Script-Console-X-41895" target="_blank">ScriptBlox</a>
+    <a class="link-btn github" href="https://github.com/Dhelann/Project-Cr1mson" target="_blank">GitHub</a>
+    <a class="link-btn" href="https://github.com/Dhelann/Project-Cr1mson/issues/new/choose" target="_blank">Report Bug / Request Feature</a>
+    <button class="copy-btn" onclick="copyScript()">Script</button>
+  </div>
+
+  <p class="subtext" style="margin-top:40px;"></p>
 </div>
 
 <script>
 function copyScript(){
-const text=document.getElementById("scriptText").innerText
-navigator.clipboard.writeText(text).then(()=>{
-const toast=document.getElementById("toast")
-toast.classList.add("show")
-setTimeout(()=>{toast.classList.remove("show")},2000)
-})
+  const text=document.getElementById("scriptText").innerText
+  navigator.clipboard.writeText(text).then(()=>{
+    const toast=document.getElementById("toast")
+    toast.classList.add("show")
+    setTimeout(()=>{toast.classList.remove("show")},2000)
+  })
 }
 </script>
 </body>
