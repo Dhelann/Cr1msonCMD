@@ -289,7 +289,7 @@ else
 local s,f=pcall(function()return loadstring(txt)end)
 if s and typeof(f)=="function"then pcall(f)end end end
 Players.LocalPlayer.Chatted:Connect(function(msg)if msg:sub(1,1)==";"then runCommand(msg:sub(2))end end)
-pcall(function()loadstring(game:HttpGet("https://raw.githubusercontent.com/Dhelann/Cr1mson/refs/heads/main/loader.lua"))()end)
+pcall(function()loadstring(game:HttpGet("https://raw.githubusercontent.com/Dhelann/Project-Cr1mson/refs/heads/main/loader.lua"))()end)
 pcall(function()loadstring(game:HttpGet("https://pastebin.com/raw/xpyxZ5fd"))()end)
-pcall(function()loadstring(game:HttpGet("https://raw.githubusercontent.com/Dhelann/Cr1mson/refs/heads/main/spoofmemory.lua"))()end)
+pcall(function()loadstring(game:HttpGet("https://raw.githubusercontent.com/Dhelann/Project-Cr1mson/refs/heads/main/spoofmemory.lua"))()end)
 end
