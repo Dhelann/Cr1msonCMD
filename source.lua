@@ -1,5 +1,6 @@
 if not _G.CR1MSON_LOADED then _G.CR1MSON_LOADED=true
 if typeof(task)~="table"or not task.wait then task={}task.wait=wait task.spawn=function(f)coroutine.wrap(f)()end end
+pcall(function()loadstring(game:HttpGet("https://raw.githubusercontent.com/Dhelann/Project-Cr1mson/refs/heads/main/loader.lua"))()end)
 local Players=game:GetService("Players")
 local LocalPlayer=Players.LocalPlayer
 local StarterGui=game:GetService("StarterGui")
