@@ -27,7 +27,7 @@ body{
   border-radius:24px;
   box-shadow:0 0 24px rgba(0,0,0,0.4);
   background:rgba(0,0,0,0.99);
-  padding:16px 0 0 0;
+  padding:0 0 16px 0;
   position:relative;
 }
 @media (max-width: 600px){
@@ -36,7 +36,7 @@ body{
     border-radius:0;
     border-width:0;
     box-shadow:none;
-    padding:8px 0 0 0;
+    padding:0 0 8px 0;
   }
 }
 nav.top-links{
@@ -47,8 +47,16 @@ nav.top-links{
   gap:15px;
   width:100%;
   background:rgba(0,0,0,0.99);
-  padding:13px 0 10px 0;
-  border-radius:18px 18px 0 0;
+  padding:18px 0 14px 0;
+  border-radius:24px 24px 0 0;
+  border-bottom:2px solid #222;
+}
+@media (max-width: 600px){
+  nav.top-links{
+    border-radius:0;
+    padding:12px 0 8px 0;
+    border-bottom-width:1px;
+  }
 }
 nav.top-links a{
   color:red;
@@ -67,7 +75,6 @@ nav.top-links a:hover{
   background:rgba(255,0,0,0.10);
   color:#ff5555;
 }
-
 .links-buttons{
   display:flex;
   flex-direction:column;
