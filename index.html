@@ -28,6 +28,7 @@ body{
   box-shadow:0 0 24px rgba(0,0,0,0.4);
   background:rgba(0,0,0,0.99);
   padding:16px 0;
+  position:relative;
 }
 @media (max-width: 600px){
   .content{
@@ -36,6 +37,28 @@ body{
     border-width:0;
     box-shadow:none;
     padding:8px 0;
+  }
+}
+.status-subtext{
+  position:absolute;
+  top:18px;
+  right:22px;
+  font-size:0.99em;
+  color:#ff5555;
+  opacity:0.82;
+  z-index:10;
+  pointer-events:none;
+  user-select:none;
+}
+.working {
+  color:#00ff62;
+  font-weight:600;
+}
+@media (max-width:600px){
+  .status-subtext{
+    top:10px;
+    right:8px;
+    font-size:0.93em;
   }
 }
 @keyframes fadeIn{to{opacity:1}}
@@ -82,6 +105,13 @@ margin-bottom:30px;
 opacity:0;
 animation:fadeInText 2s ease 3s forwards;
 color:red
+}
+.bottom-subtext{
+  font-size:0.95em;
+  margin-top:40px;
+  color:#ff5555;
+  opacity:0.7;
+  animation:fadeInText 2s ease 3.2s forwards;
 }
 @keyframes fadeInText{to{opacity:1}}
 .section{
@@ -181,13 +211,14 @@ font-size:0.97em;
 <div class="loader"><span>...</span></div>
 <div class="toast" id="toast">Copied to clipboard.</div>
 <div class="content">
+  <span class="status-subtext">Script Status: <span class="working">Working</span></span>
   <h1>Project Cr1mson</h1>
   <p class="subtext">With plenty commands already built-in and more to come, this script is only getting better.</p>
   <div class="section">
-  <p><strong>A Universal FE Admin script made to cause Chaos.</strong></p>
-  <p><strong>Built with plenty of Useful and Powerful Commands.</strong></p>
-  <p><strong>Script Co-Created by two individuals named Dhelan and xlox262.</strong></p>
-</div>
+    <p><strong>A Universal FE Admin script made to cause Chaos.</strong></p>
+    <p><strong>Built with plenty of Useful and Powerful Commands.</strong></p>
+    <p><strong>Script Co-Created by two individuals named Dhelan and xlox262.</strong></p>
+  </div>
   <div class="section">
     <h2>Features</h2>
     <ul class="feature-list">
@@ -232,7 +263,7 @@ font-size:0.97em;
     <a class="link-btn github" href="https://github.com/Dhelann/Project-Cr1mson" target="_blank">GitHub</a>
     <button class="copy-btn" onclick="copyScript()">Script</button>
   </div>
-  <p class="subtext" style="margin-top:40px;"></p>
+  <p class="bottom-subtext">© Project Cr1mson 2025</p>
 </div>
 <script>
 function copyScript(){
