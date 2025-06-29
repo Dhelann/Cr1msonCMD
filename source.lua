@@ -25,7 +25,7 @@ local SPEED=1
 local lp=Players.LocalPlayer
 local cam=workspace.CurrentCamera
 local root=lp.Character and (lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso"))
-if not root then repeat task.wait() until lp.Character and (lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso")) root=lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso") end
+if not root then repeat task.wait() until lp.Character and (lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso")) root=lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso")end
 state.bg=Instance.new("BodyGyro",root)
 state.bg.P=9e4
 state.bg.MaxTorque=Vector3.new(9e9,9e9,9e9)
@@ -138,9 +138,9 @@ local spdHum=spdChar:FindFirstChildOfClass("Humanoid")
 if spdHum then spdHum.WalkSpeed=spdVal end
 end
 end
-commandHandlers.remotespy=function(args)local function cr1mFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end cr1mFetch("https://raw.githubusercontent.com/78n/SimpleSpy/refs/heads/main/SimpleSpySource.lua")end
+commandHandlers.remotespy=function(args)local function cr1mFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end cr1mFetch("https://raw.githubusercontent.com/Upbolt/RemoteSpy/main/Main.lua")end
 commandHandlers.dex=function(args)local function cr1mFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end cr1mFetch("https://raw.githubusercontent.com/peyton2465/Dex/master/out.lua")end
-commandHandlers.chatadmin=function(args)local function cr1mFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end cr1mFetch("https://pastefy.app/H6k8QmIp/raw")end
+commandHandlers.chatadmin=function(args)local function cr1mFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end cr1mFetch("https://raw.githubusercontent.com/Dhelann/chat-admin/main/source")end
 commandHandlers.reset=function(args)
 local rstChar=LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 rstChar:BreakJoints()
@@ -265,6 +265,41 @@ commandHandlers.unfullbright=function(args)Lighting.Brightness=2 Lighting.ClockT
 commandHandlers.esp=function(args)getgenv().Cr1msonESP()end
 commandHandlers.unesp=function(args)getgenv().unCr1msonESP()end
 commandHandlers.antiafk=function(args)for _,v in pairs(getconnections(Players.LocalPlayer.Idled))do v:Disable()end end
+
+-- FLINGTARGET COMMAND (FLING ONCE)
+local flingSpin
+local function flingOnce(target)
+if flingSpin then flingSpin:Destroy() end
+if not LocalPlayer.Character or not target or not target.Character then return end
+local hrp=LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+local targetHrp=target.Character:FindFirstChild("HumanoidRootPart")
+if not hrp or not targetHrp then return end
+hrp.CFrame=targetHrp.CFrame+Vector3.new(0,1,0)
+flingSpin=Instance.new("BodyAngularVelocity")
+flingSpin.AngularVelocity=Vector3.new(0,999999,0)
+flingSpin.MaxTorque=Vector3.new(999999,999999,999999)
+flingSpin.P=10000
+flingSpin.Parent=hrp
+task.wait(0.5)
+flingSpin:Destroy()
+flingSpin=nil
+end
+commandHandlers.fling=function(args)
+local tgtName=args[2]
+if not tgtName then return end
+tgtName=tgtName:lower()
+for _,p in ipairs(Players:GetPlayers())do
+if p~=LocalPlayer then
+local uname=p.Name:lower()
+local dname=p.DisplayName:lower()
+if uname:find(tgtName)or dname:find(tgtName)then
+flingOnce(p)
+break
+end
+end
+end
+end
+
 local function runCommand(txt)
 if txt==""then return end
 local args=split(txt)
