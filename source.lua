@@ -87,6 +87,28 @@ local hum=LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass(
 if hum then hum.PlatformStand=false end
 end
 end
+commandHandlers.infjump=function(args)
+local plyr=game:GetService("Players").LocalPlayer
+local chr=plyr.Character or plyr.CharacterAdded:Wait()
+local root=chr:WaitForChild("HumanoidRootPart")
+local AirWalkPart=Instance.new("Part")
+AirWalkPart.Size=Vector3.new(7,1,3)
+AirWalkPart.Transparency=1
+AirWalkPart.Anchored=true
+AirWalkPart.CanCollide=true
+AirWalkPart.Name="Fuck gravity to the moon we go"
+AirWalkPart.Parent=workspace
+game:GetService("RunService").RenderStepped:Connect(function()
+AirWalkPart.CFrame=root.CFrame*CFrame.new(0,-4,0)
+end)
+end
+commandHandlers.uninfjump=function(args)
+for i,v in pairs(workspace:GetChildren())do
+if tostring(v)=="Fuck gravity to the moon we go"then
+v:Destroy()
+end
+end
+end
 commandHandlers.lay=function(args)
 local layPlr=Players.LocalPlayer
 local layChar=layPlr.Character or layPlr.CharacterAdded:Wait()
