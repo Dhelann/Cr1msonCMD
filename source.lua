@@ -265,164 +265,143 @@ commandHandlers.unfullbright=function(args)Lighting.Brightness=2 Lighting.ClockT
 commandHandlers.esp=function(args)getgenv().Cr1msonESP()end
 commandHandlers.unesp=function(args)getgenv().unCr1msonESP()end
 commandHandlers.antiafk=function(args)for _,v in pairs(getconnections(Players.LocalPlayer.Idled))do v:Disable()end end
-
--- FLING COMMAND (CRIMSON FLING / SKIDFLING)
 local function crimsonFling(targetPlayer)
-    local character = LocalPlayer.Character
-    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-    local rootPart = humanoid and humanoid.RootPart
-
-    local oldPos
-    local savedFPDH
-
-    local tChar = targetPlayer.Character
-    local tHumanoid = tChar and tChar:FindFirstChildOfClass("Humanoid")
-    local tRootPart = tHumanoid and tHumanoid.RootPart
-    local tHead = tChar and tChar:FindFirstChild("Head")
-    local accessory = tChar and tChar:FindFirstChildOfClass("Accessory")
-    local handle = accessory and accessory:FindFirstChild("Handle")
-
-    if character and humanoid and rootPart then
-        if rootPart.Velocity.Magnitude < 50 then
-            oldPos = rootPart.CFrame
-        end
-        if tRootPart and tRootPart:IsGrounded() then
-            return -- Target is grounded
-        end
-
-        -- Camera focus
-        if tHead then
-            workspace.CurrentCamera.CameraSubject = tHead
-        elseif handle then
-            workspace.CurrentCamera.CameraSubject = handle
-        elseif tHumanoid and tRootPart then
-            workspace.CurrentCamera.CameraSubject = tHumanoid
-        end
-
-        if not tChar:FindFirstChildWhichIsA("BasePart") then
-            return
-        end
-
-        local function setFlingPos(basePart, pos, ang)
-            rootPart.CFrame = CFrame.new(basePart.Position) * pos * ang
-            character:SetPrimaryPartCFrame(CFrame.new(basePart.Position) * pos * ang)
-            rootPart.Velocity = Vector3.new(9e7, 9e7 * 10, 9e7)
-            rootPart.RotVelocity = Vector3.new(9e8, 9e8, 9e8)
-        end
-
-        local function flingBasePart(basePart)
-            local waitTime = 3
-            local startTick = tick()
-            local angle = 0
-
-            repeat
-                if rootPart and tHumanoid then
-                    if basePart.Velocity.Magnitude < 50 then
-                        angle = angle + 100
-
-                        setFlingPos(basePart, CFrame.new(0, 1.5, 0) + tHumanoid.MoveDirection * basePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(angle), 0, 0))
-                        task.wait()
-                        setFlingPos(basePart, CFrame.new(0, -1.5, 0) + tHumanoid.MoveDirection * basePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(angle), 0, 0))
-                        task.wait()
-                        setFlingPos(basePart, CFrame.new(2.25, 1.5, -2.25) + tHumanoid.MoveDirection * basePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(angle), 0, 0))
-                        task.wait()
-                        setFlingPos(basePart, CFrame.new(-2.25, -1.5, 2.25) + tHumanoid.MoveDirection * basePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(angle), 0, 0))
-                        task.wait()
-                        setFlingPos(basePart, CFrame.new(0, 1.5, 0) + tHumanoid.MoveDirection, CFrame.Angles(math.rad(angle), 0, 0))
-                        task.wait()
-                        setFlingPos(basePart, CFrame.new(0, -1.5, 0) + tHumanoid.MoveDirection, CFrame.Angles(math.rad(angle), 0, 0))
-                        task.wait()
-                    else
-                        setFlingPos(basePart, CFrame.new(0, 1.5, tHumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
-                        task.wait()
-                        setFlingPos(basePart, CFrame.new(0, -1.5, -tHumanoid.WalkSpeed), CFrame.Angles(0, 0, 0))
-                        task.wait()
-                        setFlingPos(basePart, CFrame.new(0, 1.5, tHumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
-                        task.wait()
-                        setFlingPos(basePart, CFrame.new(0, 1.5, tRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(math.rad(90), 0, 0))
-                        task.wait()
-                        setFlingPos(basePart, CFrame.new(0, -1.5, -tRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(0, 0, 0))
-                        task.wait()
-                        setFlingPos(basePart, CFrame.new(0, 1.5, tRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(math.rad(90), 0, 0))
-                        task.wait()
-                        setFlingPos(basePart, CFrame.new(0, -1.5, 0), CFrame.Angles(math.rad(90), 0, 0))
-                        task.wait()
-                        setFlingPos(basePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
-                        task.wait()
-                        setFlingPos(basePart, CFrame.new(0, -1.5, 0), CFrame.Angles(math.rad(-90), 0, 0))
-                        task.wait()
-                        setFlingPos(basePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
-                        task.wait()
-                    end
-                else
-                    break
-                end
-            until basePart.Velocity.Magnitude > 500 or basePart.Parent ~= tChar or targetPlayer.Parent ~= Players or not targetPlayer.Character == tChar or tRootPart:IsGrounded() or humanoid.Health <= 0 or tick() > startTick + waitTime
-        end
-
-        savedFPDH = workspace.FallenPartsDestroyHeight
-        workspace.FallenPartsDestroyHeight = 0/0
-
-        local bodyVel = Instance.new("BodyVelocity")
-        bodyVel.Name = "CrimsonVel"
-        bodyVel.Parent = rootPart
-        bodyVel.Velocity = Vector3.new(9e8, 9e8, 9e8)
-        bodyVel.MaxForce = Vector3.new(1/0, 1/0, 1/0)
-
-        humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
-
-        if tRootPart and tHead then
-            if (tRootPart.CFrame.Position - tHead.CFrame.Position).Magnitude > 5 then
-                flingBasePart(tHead)
-            else
-                flingBasePart(tRootPart)
-            end
-        elseif tRootPart and not tHead then
-            flingBasePart(tRootPart)
-        elseif not tRootPart and tHead then
-            flingBasePart(tHead)
-        elseif not tRootPart and not tHead and accessory and handle then
-            flingBasePart(handle)
-        else
-            return
-        end
-
-        bodyVel:Destroy()
-        humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
-        workspace.CurrentCamera.CameraSubject = humanoid
-
-        repeat
-            rootPart.CFrame = oldPos * CFrame.new(0, 0.5, 0)
-            character:PivotTo(oldPos * CFrame.new(0, 0.5, 0))
-            humanoid:ChangeState("GettingUp")
-            for _, part in ipairs(character:GetChildren()) do
-                if part:IsA("BasePart") then
-                    part.Velocity, part.RotVelocity = Vector3.new(), Vector3.new()
-                end
-            end
-            task.wait()
-        until (rootPart.Position - oldPos.Position).Magnitude < 25
-
-        workspace.FallenPartsDestroyHeight = savedFPDH
-    end
+local character = LocalPlayer.Character
+local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+local rootPart = humanoid and humanoid.RootPart
+local oldPos
+local savedFPDH
+local tChar = targetPlayer.Character
+local tHumanoid = tChar and tChar:FindFirstChildOfClass("Humanoid")
+local tRootPart = tHumanoid and tHumanoid.RootPart
+local tHead = tChar and tChar:FindFirstChild("Head")
+local accessory = tChar and tChar:FindFirstChildOfClass("Accessory")
+local handle = accessory and accessory:FindFirstChild("Handle")
+if character and humanoid and rootPart then
+if rootPart.Velocity.Magnitude < 50 then
+oldPos = rootPart.CFrame
 end
-
+if tRootPart and tRootPart:IsGrounded() then
+return
+end
+if tHead then
+workspace.CurrentCamera.CameraSubject = tHead
+elseif handle then
+workspace.CurrentCamera.CameraSubject = handle
+elseif tHumanoid and tRootPart then
+workspace.CurrentCamera.CameraSubject = tHumanoid
+end
+if not tChar:FindFirstChildWhichIsA("BasePart") then
+return
+end
+local function setFlingPos(basePart, pos, ang)
+rootPart.CFrame = CFrame.new(basePart.Position) * pos * ang
+character:SetPrimaryPartCFrame(CFrame.new(basePart.Position) * pos * ang)
+rootPart.Velocity = Vector3.new(9e7, 9e7 * 10, 9e7)
+rootPart.RotVelocity = Vector3.new(9e8, 9e8, 9e8)
+end
+local function flingBasePart(basePart)
+local waitTime = 3
+local startTick = tick()
+local angle = 0
+repeat
+if rootPart and tHumanoid then
+if basePart.Velocity.Magnitude < 50 then
+angle = angle + 100
+setFlingPos(basePart, CFrame.new(0, 1.5, 0) + tHumanoid.MoveDirection * basePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(angle), 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, -1.5, 0) + tHumanoid.MoveDirection * basePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(angle), 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(2.25, 1.5, -2.25) + tHumanoid.MoveDirection * basePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(angle), 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(-2.25, -1.5, 2.25) + tHumanoid.MoveDirection * basePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(angle), 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, 1.5, 0) + tHumanoid.MoveDirection, CFrame.Angles(math.rad(angle), 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, -1.5, 0) + tHumanoid.MoveDirection, CFrame.Angles(math.rad(angle), 0, 0))
+task.wait()
+else
+setFlingPos(basePart, CFrame.new(0, 1.5, tHumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, -1.5, -tHumanoid.WalkSpeed), CFrame.Angles(0, 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, 1.5, tHumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, 1.5, tRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(math.rad(90), 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, -1.5, -tRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(0, 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, 1.5, tRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(math.rad(90), 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, -1.5, 0), CFrame.Angles(math.rad(90), 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, -1.5, 0), CFrame.Angles(math.rad(-90), 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
+task.wait()
+end
+else
+break
+end
+until basePart.Velocity.Magnitude > 500 or basePart.Parent ~= tChar or targetPlayer.Parent ~= Players or not targetPlayer.Character == tChar or tRootPart:IsGrounded() or humanoid.Health <= 0 or tick() > startTick + waitTime
+end
+savedFPDH = workspace.FallenPartsDestroyHeight
+workspace.FallenPartsDestroyHeight = 0/0
+local bodyVel = Instance.new("BodyVelocity")
+bodyVel.Name = "CrimsonVel"
+bodyVel.Parent = rootPart
+bodyVel.Velocity = Vector3.new(9e8, 9e8, 9e8)
+bodyVel.MaxForce = Vector3.new(1/0, 1/0, 1/0)
+humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+if tRootPart and tHead then
+if (tRootPart.CFrame.Position - tHead.CFrame.Position).Magnitude > 5 then
+flingBasePart(tHead)
+else
+flingBasePart(tRootPart)
+end
+elseif tRootPart and not tHead then
+flingBasePart(tRootPart)
+elseif not tRootPart and tHead then
+flingBasePart(tHead)
+elseif not tRootPart and not tHead and accessory and handle then
+flingBasePart(handle)
+else
+return
+end
+bodyVel:Destroy()
+humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+workspace.CurrentCamera.CameraSubject = humanoid
+repeat
+rootPart.CFrame = oldPos * CFrame.new(0, 0.5, 0)
+character:PivotTo(oldPos * CFrame.new(0, 0.5, 0))
+humanoid:ChangeState("GettingUp")
+for _, part in ipairs(character:GetChildren()) do
+if part:IsA("BasePart") then
+part.Velocity, part.RotVelocity = Vector3.new(), Vector3.new()
+end
+end
+task.wait()
+until (rootPart.Position - oldPos.Position).Magnitude < 25
+workspace.FallenPartsDestroyHeight = savedFPDH
+end
+end
 commandHandlers.fling = function(args)
-    local tgtName = args[2]
-    if not tgtName then return end
-    tgtName = tgtName:lower()
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer then
-            local uname = player.Name:lower()
-            local dname = player.DisplayName:lower()
-            if uname:find(tgtName) or dname:find(tgtName) then
-                crimsonFling(player)
-                break
-            end
-        end
-    end
+local tgtName = args[2]
+if not tgtName then return end
+tgtName = tgtName:lower()
+for _, player in ipairs(Players:GetPlayers()) do
+if player ~= LocalPlayer then
+local uname = player.Name:lower()
+local dname = player.DisplayName:lower()
+if uname:find(tgtName) or dname:find(tgtName) then
+crimsonFling(player)
+break
 end
-
+end
+end
+end
 local function runCommand(txt)
 if txt==""then return end
 local args=split(txt)
