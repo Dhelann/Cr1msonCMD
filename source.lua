@@ -436,4 +436,18 @@ if s and typeof(f)=="function"then pcall(f)end
 end
 end
 Players.LocalPlayer.Chatted:Connect(function(msg)if msg:sub(1,1)==";"then runCommand(msg:sub(2))end end)
+local function onChat(msg)
+if msg:sub(1,1)==";" then runCommand(msg:sub(2)) end
+end
+if Players.LocalPlayer.Chatted then
+Players.LocalPlayer.Chatted:Connect(onChat)
+end
+local TextChatService = game:GetService("TextChatService")
+if TextChatService and TextChatService.OnIncomingMessage then
+TextChatService.OnIncomingMessage:Connect(function(message)
+if message.TextSource and message.TextSource.UserId == Players.LocalPlayer.UserId then
+onChat(message.Text)
+end
+end)
+end
 end
