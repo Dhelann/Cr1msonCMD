@@ -233,19 +233,6 @@ hrp.BrickColor=BrickColor.new("Really red")
 hrp.Material=Enum.Material.Neon
 hrp.CanCollide=false end end
 end
-commandHandlers.noclip=function(args)
-if cr1mNoclipConn then cr1mNoclipConn:Disconnect()cr1mNoclipConn=nil end
-cr1mNoclipConn=RunService.Stepped:Connect(function()
-if LocalPlayer.Character then
-for _,v in pairs(LocalPlayer.Character:GetDescendants())do
-if v:IsA("BasePart")then v.CanCollide=false end end end end)
-end
-commandHandlers.clip=function(args)
-if cr1mNoclipConn then cr1mNoclipConn:Disconnect()cr1mNoclipConn=nil end
-if LocalPlayer.Character then
-for _,v in pairs(LocalPlayer.Character:GetDescendants())do
-if v:IsA("BasePart")then v.CanCollide=true end end end
-end
 commandHandlers.spin=function(args)
 local spd=tonumber(args[2])or 10
 local spinChar=LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
