@@ -1,1 +1,1 @@
->https://cr1mson-cmd.vercel.app/
+>https://dhelirium.netlify.app/
