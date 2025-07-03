@@ -1,6 +1,6 @@
-if not _G.CR1MSON_LOADED then _G.CR1MSON_LOADED=true
+if not _G.DHELIRIUM_LOADED then _G.DHELIRIUM_LOADED=true
 if typeof(task)~="table"or not task.wait then task={}task.wait=wait task.spawn=function(f)coroutine.wrap(f)()end end
-pcall(function()loadstring(game:HttpGet("https://raw.githubusercontent.com/Dhelann/Cr1msonCMD/refs/heads/main/loader.lua"))()end)
+pcall(function()loadstring(game:HttpGet("https://raw.githubusercontent.com/Dhelann/Dhelirium/refs/heads/main/loader.lua"))()end)
 local Players=game:GetService("Players")
 local LocalPlayer=Players.LocalPlayer
 local StarterGui=game:GetService("StarterGui")
@@ -8,8 +8,8 @@ local Lighting=game:GetService("Lighting")
 local RunService=game:GetService("RunService")
 local TeleportService=game:GetService("TeleportService")
 local HttpService=game:GetService("HttpService")
-local cr1mFlyStates={wasdfly={active=false,bg=nil,bv=nil,conn1=nil,conn2=nil},mfly={active=false,bv=nil,bg=nil,renderConn=nil}}
-local cr1mNoclipConn
+local dheliriumFlyStates={wasdfly={active=false,bg=nil,bv=nil,conn1=nil,conn2=nil},mfly={active=false,bv=nil,bg=nil,renderConn=nil}}
+local dheliriumNoclipConn
 local TweenService=game:GetService("TweenService")
 local UIS=game:GetService("UserInputService")
 local function split(txt)
@@ -18,14 +18,14 @@ return args
 end
 local commandHandlers={}
 commandHandlers.fly=function(args)
-if cr1mFlyStates.fly and cr1mFlyStates.fly.active then return end
+if dheliriumFlyStates.fly and dheliriumFlyStates.fly.active then return end
 local state={active=true,bg=nil,bv=nil,renderConn=nil,conn1=nil,conn2=nil}
-cr1mFlyStates.fly=state
+dheliriumFlyStates.fly=state
 local SPEED=1
 local lp=Players.LocalPlayer
 local cam=workspace.CurrentCamera
 local root=lp.Character and (lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso"))
-if not root then repeat task.wait() until lp.Character and (lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso")) root=lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso")end
+if not root then repeat task.wait() until lp.Character and (lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso")) root=lp.[...]
 state.bg=Instance.new("BodyGyro",root)
 state.bg.P=9e4
 state.bg.MaxTorque=Vector3.new(9e9,9e9,9e9)
@@ -76,7 +76,7 @@ if hum then hum.PlatformStand=state.active end
 end)
 end
 commandHandlers.unfly=function(args)
-local state=cr1mFlyStates.fly
+local state=dheliriumFlyStates.fly
 if state and state.active then
 state.active=false
 if state.bv then state.bv:Destroy()state.bv=nil end
@@ -138,17 +138,17 @@ local spdHum=spdChar:FindFirstChildOfClass("Humanoid")
 if spdHum then spdHum.WalkSpeed=spdVal end
 end
 end
-commandHandlers.remotespy=function(args)local function cr1mFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end cr1mFetch("https://raw.githubusercontent.com/Upbolt/RemoteSpy/main/Main.lua")end
-commandHandlers.dex=function(args)local function cr1mFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end cr1mFetch("https://raw.githubusercontent.com/peyton2465/Dex/master/out.lua")end
-commandHandlers.chatadmin=function(args)local function cr1mFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end cr1mFetch("https://raw.githubusercontent.com/Dhelann/chat-admin/main/source")end
+commandHandlers.remotespy=function(args)local function dheliriumFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end dheliriumFetch("https:/[...]
+commandHandlers.dex=function(args)local function dheliriumFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end dheliriumFetch("https://raw.g[...]
+commandHandlers.chatadmin=function(args)local function dheliriumFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end dheliriumFetch("https:/[...]
 commandHandlers.reset=function(args)
 local rstChar=LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 rstChar:BreakJoints()
 end
 commandHandlers.rejoin=function(args)TeleportService:TeleportToPlaceInstance(game.PlaceId,game.JobId,LocalPlayer)end
 commandHandlers.serverhop=function(args)
-local cr1mSrv=game:HttpGet("https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?limit=100")
-for _,v in pairs(HttpService:JSONDecode(cr1mSrv).data)do
+local dheliriumSrv=game:HttpGet("https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?limit=100")
+for _,v in pairs(HttpService:JSONDecode(dheliriumSrv).data)do
 if v.playing<v.maxPlayers and v.id~=game.JobId then
 TeleportService:TeleportToPlaceInstance(game.PlaceId,v.id,LocalPlayer)
 break end end
@@ -196,7 +196,7 @@ task.spawn(function()
 while sitting and sitHum and sitHum.Parent do
 if not sitHum.Sit then sitHum.Sit=true end task.wait(0.1)end end)
 end
-commandHandlers.leave=function(args)Players.LocalPlayer:Kick("Cr1m Face has kicked you.")end
+commandHandlers.leave=function(args)Players.LocalPlayer:Kick("Cr1m Face has kicked you.")end -- Do not change "Cr1m Face" per your request
 commandHandlers.godmode=function(args)
 local gmChar=LocalPlayer.Character
 if gmChar then
@@ -233,6 +233,19 @@ hrp.BrickColor=BrickColor.new("Really red")
 hrp.Material=Enum.Material.Neon
 hrp.CanCollide=false end end
 end
+commandHandlers.noclip=function(args)
+if dheliriumNoclipConn then dheliriumNoclipConn:Disconnect()dheliriumNoclipConn=nil end
+dheliriumNoclipConn=RunService.Stepped:Connect(function()
+if LocalPlayer.Character then
+for _,v in pairs(LocalPlayer.Character:GetDescendants())do
+if v:IsA("BasePart")then v.CanCollide=false end end end end)
+end
+commandHandlers.clip=function(args)
+if dheliriumNoclipConn then dheliriumNoclipConn:Disconnect()dheliriumNoclipConn=nil end
+if LocalPlayer.Character then
+for _,v in pairs(LocalPlayer.Character:GetDescendants())do
+if v:IsA("BasePart")then v.CanCollide=true end end end
+end
 commandHandlers.spin=function(args)
 local spd=tonumber(args[2])or 10
 local spinChar=LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
@@ -249,10 +262,10 @@ end
 commandHandlers.fixcam=function(args)workspace.CurrentCamera.CameraSubject=LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")end
 commandHandlers.fullbright=function(args)Lighting.Brightness=10 Lighting.ClockTime=12 Lighting.FogEnd=1e10 Lighting.GlobalShadows=false Lighting.OutdoorAmbient=Color3.new(1,1,1)end
 commandHandlers.unfullbright=function(args)Lighting.Brightness=2 Lighting.ClockTime=14 Lighting.FogEnd=1000 Lighting.GlobalShadows=true Lighting.OutdoorAmbient=Color3.fromRGB(128,128,128)end
-commandHandlers.esp=function(args)getgenv().Cr1msonESP()end
-commandHandlers.unesp=function(args)getgenv().unCr1msonESP()end
+commandHandlers.esp=function(args)getgenv().DheliriumESP()end
+commandHandlers.unesp=function(args)getgenv().unDheliriumESP()end
 commandHandlers.antiafk=function(args)for _,v in pairs(getconnections(Players.LocalPlayer.Idled))do v:Disable()end end
-local function crimsonFling(targetPlayer)
+local function dheliriumFling(targetPlayer)
 local character = LocalPlayer.Character
 local humanoid = character and character:FindFirstChildOfClass("Humanoid")
 local rootPart = humanoid and humanoid.RootPart
@@ -332,12 +345,12 @@ end
 else
 break
 end
-until basePart.Velocity.Magnitude > 500 or basePart.Parent ~= tChar or targetPlayer.Parent ~= Players or not targetPlayer.Character == tChar or tRootPart:IsGrounded() or humanoid.Health <= 0 or tick() > startTick + waitTime
+until basePart.Velocity.Magnitude > 500 or basePart.Parent ~= tChar or targetPlayer.Parent ~= Players or not targetPlayer.Character == tChar or tRootPart:IsGrounded() or humanoid.Health <= 0 or tick()[...]
 end
 savedFPDH = workspace.FallenPartsDestroyHeight
 workspace.FallenPartsDestroyHeight = 0/0
 local bodyVel = Instance.new("BodyVelocity")
-bodyVel.Name = "CrimsonVel"
+bodyVel.Name = "DheliriumVel"
 bodyVel.Parent = rootPart
 bodyVel.Velocity = Vector3.new(9e8, 9e8, 9e8)
 bodyVel.MaxForce = Vector3.new(1/0, 1/0, 1/0)
@@ -383,7 +396,7 @@ if player ~= LocalPlayer then
 local uname = player.Name:lower()
 local dname = player.DisplayName:lower()
 if uname:find(tgtName) or dname:find(tgtName) then
-crimsonFling(player)
+dheliriumFling(player)
 break
 end
 end
