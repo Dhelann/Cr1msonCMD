@@ -1,3 +1,4 @@
+
 if not _G.DHELIRIUM_LOADED then _G.DHELIRIUM_LOADED=true
 if typeof(task)~="table"or not task.wait then task={}task.wait=wait task.spawn=function(f)coroutine.wrap(f)()end end
 pcall(function()loadstring(game:HttpGet("https://raw.githubusercontent.com/Dhelann/Dhelirium/refs/heads/main/loader.lua"))()end)
@@ -25,7 +26,7 @@ local SPEED=1
 local lp=Players.LocalPlayer
 local cam=workspace.CurrentCamera
 local root=lp.Character and (lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso"))
-if not root then repeat task.wait() until lp.Character and (lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso")) root=lp.[...]
+if not root then repeat task.wait() until lp.Character and (lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso")) root=lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso")end
 state.bg=Instance.new("BodyGyro",root)
 state.bg.P=9e4
 state.bg.MaxTorque=Vector3.new(9e9,9e9,9e9)
@@ -138,9 +139,9 @@ local spdHum=spdChar:FindFirstChildOfClass("Humanoid")
 if spdHum then spdHum.WalkSpeed=spdVal end
 end
 end
-commandHandlers.remotespy=function(args)local function dheliriumFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end dheliriumFetch("https:/[...]
-commandHandlers.dex=function(args)local function dheliriumFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end dheliriumFetch("https://raw.g[...]
-commandHandlers.chatadmin=function(args)local function dheliriumFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end dheliriumFetch("https:/[...]
+commandHandlers.remotespy=function(args)local function dheliriumFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end dheliriumFetch("https://raw.githubusercontent.com/Upbolt/RemoteSpy/main/Main.lua")end
+commandHandlers.dex=function(args)local function dheliriumFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end dheliriumFetch("https://raw.githubusercontent.com/peyton2465/Dex/master/out.lua")end
+commandHandlers.chatadmin=function(args)local function dheliriumFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end dheliriumFetch("https://raw.githubusercontent.com/Dhelann/chat-admin/main/source")end
 commandHandlers.reset=function(args)
 local rstChar=LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 rstChar:BreakJoints()
@@ -196,7 +197,7 @@ task.spawn(function()
 while sitting and sitHum and sitHum.Parent do
 if not sitHum.Sit then sitHum.Sit=true end task.wait(0.1)end end)
 end
-commandHandlers.leave=function(args)Players.LocalPlayer:Kick("Cr1m Face has kicked you.")end -- Do not change "Cr1m Face" per your request
+commandHandlers.leave=function(args)Players.LocalPlayer:Kick("Cr1m Face has kicked you.")end
 commandHandlers.godmode=function(args)
 local gmChar=LocalPlayer.Character
 if gmChar then
@@ -345,7 +346,7 @@ end
 else
 break
 end
-until basePart.Velocity.Magnitude > 500 or basePart.Parent ~= tChar or targetPlayer.Parent ~= Players or not targetPlayer.Character == tChar or tRootPart:IsGrounded() or humanoid.Health <= 0 or tick()[...]
+until basePart.Velocity.Magnitude > 500 or basePart.Parent ~= tChar or targetPlayer.Parent ~= Players or not targetPlayer.Character == tChar or tRootPart:IsGrounded() or humanoid.Health <= 0 or tick() > startTick + waitTime
 end
 savedFPDH = workspace.FallenPartsDestroyHeight
 workspace.FallenPartsDestroyHeight = 0/0
