@@ -6,7 +6,7 @@
 
 **This repository** is your gateway to an **Exploit Wonderland** (or **Hellscape**, depending on how you see it).
 
-Here you'll find all kinds of *stupid*, *broken*, or *surprisingly useful* exploits — handcrafted, scavenged, or summoned straight from the depths of my brain by me, **Dhelan**. ⚡
+Here you'll find all kinds of *stupid*, *broken*, or *surprisingly useful* exploits — scavenged, or summoned straight from the depths of my brain by me, **Dhelan**. 
 
 Messing with this stuff might just launch your neurons into a weird-ass zone I like to call... **DHElirium**.  
 (*Dhelan + Delirium... get it? No? Fine.*)
