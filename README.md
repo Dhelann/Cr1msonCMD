@@ -2,11 +2,16 @@
   <img src="https://i.imgur.com/mtV5xSj.jpeg" alt="DHElirium" width="200">
 </p>
 
-<h1 align="center">Welcome to My stupid Repository ❤</h1>
+<h1 align="center">Welcome to My Stupid Repository ❤</h1>
 
-**Where** you'll find all kinds of stupid, probably-useful Lego exploits handcrafted or collected by yours truly—**Dhelan**. Messing around with this stuff might just put your brain into a weird-ass state of mind I like to call... **DHElirium**. (Get it? **Dhelan** + **Delirium**? Nah? Whatever.)
- 
-**Anyway**, enjoy scrolling through my mess of scripts, glitches, and unhinged creations. They might not make your life better, but they’ll definitely make it *more cursed*. Have fun testing this chaos- Goodluck ❤
+**This repository** is your gateway to an **Exploit Wonderland** (or **Hellscape**, depending on how you see it).
 
+Here you'll find all kinds of *stupid*, *broken*, or *surprisingly useful* exploits — handcrafted, scavenged, or summoned straight from the depths of my brain by me, **Dhelan**. ⚡
 
-> 📝 NOTE: SOME SCRIPTS ARE NOT MINE!
+Messing with this stuff might just launch your neurons into a weird-ass zone I like to call... **DHElirium**.  
+(*Dhelan + Delirium... get it? No? Fine.*)
+
+---
+
+So go ahead. Scroll through this mess of scripts, glitches, cursed utilities, and brain-melting randomness.  
+They might not fix your problems, but they’ll definitely *make them weirder*. Have fun and good luck, traveler ❤
