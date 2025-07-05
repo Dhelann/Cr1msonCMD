@@ -1,42 +1,9 @@
 <p align="center">
-  <img src="https://cdn.discordapp.com/emojis/1135543023169308702.gif" width="64" alt="logo" />
+  <img src="https://i.imgur.com/mtV5xSj.jpeg" alt="DHElirium" width="200">
 </p>
 
-<h1 align="center">💠 Dhelirium </h1>
+# Welcome to My Repository! 
 
-<p align="center">
-  A sleek, prefix-based universal admin script for <strong>every Roblox game</strong><br>
-</p>
-
-<hr>
-
-<h2 align="center">✨ Features</h2>
-
-<p align="center">
-🌍 <strong>Universal</strong> — works in <em>every</em> Roblox game<br>
-💻 <strong>Executor compatible</strong> — runs on all major exploits<br>
-💬 <strong>Tons of chat commands</strong> — admin via text input<br>
-⚡ <strong>Lightweight & optimized</strong> — no lag, no bloat<br>
-🛠️ <strong>Open source</strong> — full transparency<br>
-🧑‍💻 Created by <strong>Dhelan</strong>
-</p>
-
-<hr>
-
-<h2 align="center">🐞 Feedback / Suggestions</h2>
-
-<p align="center">
-Found a bug or got a cool idea?<br>
-→ <a href="https://discord.com/users/1261962418716803084">Dm me on Discord</a>
-</p>
-
-<hr>
-
-<h2 align="center">🔗 Links</h2>
-
-<p align="center">
-📜 <a href="https://scriptblox.com/script/Universal-Script-Console-X-41895">ScriptBlox</a><br>
-🚀 <a href="https://rscripts.net/script/dhelirium-fe-admin-free-all-games-and-executor-Eleu">RScripts</a><br>
-</p>
-
-<hr>
+**Where** you'll find all kinds of stupid, probably-useless Lego exploits handcrafted by yours truly—**Dhelan**. Messing around with this stuff might just put your brain into a weird-ass state of mind I like to call... **DHElirium**. (Get it? **Dhelan** + **Delirium**? Nah? Whatever.)
+ 
+**Anyway**, enjoy scrolling through my mess of scripts, glitches, and unhinged creations. They might not make your life better, but they’ll definitely make it *more cursed*. Have fun testing this chaos- Goodluck ❤
