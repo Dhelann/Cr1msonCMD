@@ -64,41 +64,27 @@ local C={
 "(Credits to Dhelan)",
 "--- Commands ---",
 "fly - enables fly mode",
-"unfly - disables fly mode",
-"infjump - infinite jump pad (airwalk)",
-"uninfjump - disables infinite jump",
-"lay - makes you lay down",
-"partcontrol - network ownership/part control",
-"gettools - get all tools in workspace",
-"rdestroy - destroy all workspace objects (remote-based)",
-"fproxy - fire all proximity prompts",
-"speed [value] - set your walkspeed",
-"remotespy - open SimpleSpy",
-"dex - load Dex Explorer",
-"chatadmin - open chat admin GUI",
-"deltak - get Delta keyboard",
+"lay - makes u lay down",
+"speed [value] - changes walkspeed to value",
+"remotespy - opens RemoteSpy",
+"dex - loads Dex Explorer",
+"chatadmin - gives chat admin GUI",
+"fling [player] - Flings selected Player",
 "reset - resets your character",
 "rejoin - rejoins current server",
 "serverhop - joins new server",
-"goto [player] - teleport to player",
-"antifling - activate anti-fling",
-"unantifling - deactivate anti-fling",
-"sit - make your character sit",
-"leave - kick yourself",
-"godmode - break joints but remain alive (pseudo godmode)",
-"fireremotes - fire all remotes",
-"firetouchinterests - fire all touch interests",
-"hitbox [size] - set hitbox size",
-"spin [speed] - spin your character",
-"view [player] - set camera to player",
-"fixcam - reset camera to your character",
-"fullbright - set world to full brightness",
-"unfullbright - restore world brightness",
-"esp - enable ESP (external function)",
-"unesp - disable ESP (external function)",
-"antiafk - disables Roblox idle disconnect",
-"fling [player] - fling selected player (classic Dhelirium fling)",
-"--- End of Commands ---"
+"goto [player] - teleports to player",
+"unfly - disables fly mode",
+"antifling - activates anti-fling",
+"unantifling - disables anti-fling",
+"sit - makes your character sit",
+"leave -  kicks you",
+"godmode - gives godmode",
+"fireremote - fires all remote events",
+"infjump - lets you jump infinitely",
+"uninfjump - disables inf jump",
+"deltak - get Delta keyboard",
+"--- More Commands Soon ---"
 }
 for _,v in ipairs(C)do
 local w=Instance.new("TextLabel")
@@ -300,145 +286,6 @@ task.spawn(function()
 while laying do if not layHum.PlatformStand then layHum.PlatformStand=true end task.wait()end
 layHum.PlatformStand=false end)
 end
-commandHandlers.partcontrol=function(args)
-local RunService=game:GetService("RunService")
-local h=game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-local cam=workspace.CurrentCamera
-local pc=game.Players.LocalPlayer.Character
-game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(15)
-game.Players.LocalPlayer.SimulationRadius=1000
-wait(game.Players.RespawnTime+0.5)
-game.Players.LocalPlayer.SimulationRadius=1000
-game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame=h
-workspace.CurrentCamera=cam
-task.wait(0.2)
-local function NetworkCheck(Part)
-return Part.ReceiveAge==0
-end
-local foundpart=nil
-for _,v in ipairs(workspace:GetDescendants())do
-pcall(function()
-if not v.Anchored and #v:GetConnectedParts()<=1 and NetworkCheck(v)==true then
-foundpart=v
-end
-end)
-end
-if foundpart then
-pc:WaitForChild("Animate"):Destroy()
-notify("Controllable part was found, rejoin to end this command.","TERMINAL")
-foundpart.CFrame=pc:GetPivot()
-if NetworkCheck(foundpart)==true then
-pcall(function()
-task.spawn(function()
-while task.wait(3)do
-foundpart.Velocity=Vector3.new(14.46262424,14.46262424,14.46262424)+Vector3.new(0,math.cos(tick()*10)/100,0)
-pc:PivotTo(foundpart.CFrame)
-workspace.CurrentCamera.CameraSubject=pc:FindFirstChildOfClass("Humanoid")
-end
-end)
-end)
-RunService.Heartbeat:Connect(function()
-local InAttack=false
-pcall(function()
-for _,v in ipairs(game:GetService("Players"):GetPlayers())do
-if v~=game.Players.LocalPlayer then
-local part=Instance.new("Part",workspace)
-part.Anchored=true
-part.Size=Vector3.new(v.SimulationRadius,v.SimulationRadius,v.SimulationRadius)
-part.Color=Color3.new(1,0,0)
-part.Transparency=0.99
-part.CanCollide=false
-part.CastShadow=false
-part.CFrame=v.Character:GetPivot()
-game:GetService("Debris"):AddItem(part,0.1)
-if(pc.Head.Position-v.Character.Head.Position).Magnitude<=18 then
-InAttack=true
-end
-local part=Instance.new("Part",workspace)
-part.Anchored=true
-part.Size=Vector3.new(27,27,27)
-part.Color=Color3.new(0,0,1)
-part.Transparency=0.77
-part.CanCollide=false
-part.CastShadow=false
-part.CFrame=v.Character:GetPivot()
-game:GetService("Debris"):AddItem(part,0.05)
-end
-end
-workspace.Gravity=0
-workspace.FallenPartsDestroyHeight=-9999999
-foundpart.Velocity=Vector3.zero
-foundpart.CanCollide=false
-local oldpos=foundpart.Position
-foundpart.CFrame=CFrame.lookAt(oldpos,workspace.CurrentCamera.CFrame*CFrame.new(0,0,-250).Position)
-if NetworkCheck(foundpart)==true then
-foundpart.Velocity=Vector3.zero
-workspace.CurrentCamera.CameraSubject=foundpart
-if InAttack==false then
-pc:PivotTo(CFrame.new(foundpart.Position.X,foundpart.Position.Y-12,foundpart.Position.Z))
-else
-pc:PivotTo(CFrame.new(foundpart.Position.X,foundpart.Position.Y,foundpart.Position.Z))
-end
-local controlModule=require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule"))
-local direction=controlModule:GetMoveVector()
-if direction.X>0 then
-foundpart.CFrame*=CFrame.new(1,0,0)
-end
-if direction.X<0 then
-foundpart.CFrame*=CFrame.new(-1,0,0)
-end
-if direction.Y>0 then
-foundpart.CFrame*=CFrame.new(0,1,0)
-end
-if direction.Y<0 then
-foundpart.CFrame*=CFrame.new(0,-1,0)
-end
-if direction.Z>0 then
-foundpart.CFrame*=CFrame.new(0,0,1)
-end
-if direction.Z<0 then
-foundpart.CFrame*=CFrame.new(0,0,-1)
-end
-else
-foundpart.Velocity=Vector3.new(14.46262424,14.46262424,14.46262424)+Vector3.new(0,math.cos(tick()*10)/100,0)
-pc:PivotTo(foundpart.CFrame)
-workspace.CurrentCamera.CameraSubject=pc:FindFirstChildOfClass("Humanoid")
-end
-end)
-end)
-else
-warn("Found part lost network ownership, cannot control.")
-end
-else
-warn("No usable networked part found.")
-end
-end
-commandHandlers.gettools=function(args)
-for _, v in ipairs(workspace:GetDescendants()) do
-if v:IsA("Tool") or v:IsA("BackpackItem") then
-v.Parent = game.Players.LocalPlayer.Backpack
-end
-end
-end
-end
-commandHandlers.rdestroy=function(args)
-for _, v in ipairs(workspace:GetChildren()) do
-if v.ClassName ~= "Terrain" and v.ClassName ~= "Camera" then
-RemoteDestroy(v)
-end
-end
-end
-commandHandlers.fproxy=function(args)
-local fti = 0
-for _, v in ipairs(game:GetDescendants()) do
-if v:IsA("ProximityPrompt") then
-fti += 1
-pcall(function()
-fireproximityprompt(v)
-end)
-end
-end
-end
 commandHandlers.speed=function(args)
 local spdVal=tonumber(args[2])
 if spdVal then
@@ -625,417 +472,84 @@ setFlingPos(basePart, CFrame.new(0, 1.5, 0) + tHumanoid.MoveDirection, CFrame.An
 task.wait()
 setFlingPos(basePart, CFrame.new(0, -1.5, 0) + tHumanoid.MoveDirection, CFrame.Angles(math.rad(angle), 0, 0))
 task.wait()
-commandHandlers.fly=function(args)
-if dheliriumFlyStates.fly and dheliriumFlyStates.fly.active then return end
-local state={active=true,bg=nil,bv=nil,renderConn=nil,conn1=nil,conn2=nil}
-dheliriumFlyStates.fly=state
-local SPEED=1
-local lp=Players.LocalPlayer
-local cam=workspace.CurrentCamera
-local root=lp.Character and (lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso"))
-if not root then repeat task.wait() until lp.Character and (lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso")) root=lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso") end
-state.bg=Instance.new("BodyGyro",root)
-state.bg.P=9e4
-state.bg.MaxTorque=Vector3.new(9e9,9e9,9e9)
-state.bg.CFrame=root.CFrame
-state.bv=Instance.new("BodyVelocity",root)
-state.bv.Velocity=Vector3.zero
-state.bv.MaxForce=Vector3.new(9e9,9e9,9e9)
-local control={F=0,B=0,L=0,R=0,Q=0,E=0}
-state.conn1=UIS.InputBegan:Connect(function(input,gpe)
-if gpe then return end
-if input.KeyCode==Enum.KeyCode.W then control.F=SPEED end
-if input.KeyCode==Enum.KeyCode.S then control.B=-SPEED end
-if input.KeyCode==Enum.KeyCode.A then control.L=-SPEED end
-if input.KeyCode==Enum.KeyCode.D then control.R=SPEED end
-if input.KeyCode==Enum.KeyCode.Q then control.E=-SPEED*2 end
-if input.KeyCode==Enum.KeyCode.E then control.Q=SPEED*2 end
-end)
-state.conn2=UIS.InputEnded:Connect(function(input)
-if input.KeyCode==Enum.KeyCode.W then control.F=0 end
-if input.KeyCode==Enum.KeyCode.S then control.B=0 end
-if input.KeyCode==Enum.KeyCode.A then control.L=0 end
-if input.KeyCode==Enum.KeyCode.D then control.R=0 end
-if input.KeyCode==Enum.KeyCode.Q then control.E=0 end
-if input.KeyCode==Enum.KeyCode.E then control.Q=0 end
-end)
-local ctrlMod
-pcall(function()
-ctrlMod=require(lp.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule"))
-end)
-state.renderConn=RunService.RenderStepped:Connect(function()
-if not state.active then return end
-local moveVec=Vector3.zero
-if ctrlMod then moveVec=ctrlMod:GetMoveVector()end
-local joyDir=Vector3.zero
-if moveVec.Magnitude>0 then joyDir=cam.CFrame.RightVector*moveVec.X+cam.CFrame.LookVector*-moveVec.Z end
-local keyDir=Vector3.zero
-keyDir=keyDir+cam.CFrame.LookVector*(control.F+control.B)
-keyDir=keyDir+cam.CFrame.RightVector*(control.L+control.R)
-keyDir=keyDir+cam.CFrame.UpVector*((control.Q+control.E)*0.5)
-local dir=joyDir+keyDir
-local mag=dir.Magnitude
-local flySpeed=(mag>0)and 50 or 0
-if mag>0 then dir=dir.Unit end
-state.bv.Velocity=dir*flySpeed
-state.bg.CFrame=cam.CFrame
-local hum=lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
-if hum then hum.PlatformStand=state.active end
-end)
-end
-commandHandlers.unfly=function(args)
-local state=dheliriumFlyStates.fly
-if state and state.active then
-state.active=false
-if state.bv then state.bv:Destroy()state.bv=nil end
-if state.bg then state.bg:Destroy()state.bg=nil end
-if state.renderConn then state.renderConn:Disconnect()state.renderConn=nil end
-if state.conn1 then state.conn1:Disconnect()state.conn1=nil end
-if state.conn2 then state.conn2:Disconnect()state.conn2=nil end
-local hum=LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-if hum then hum.PlatformStand=false end
-end
-end
-commandHandlers.infjump=function(args)
-local plyr=game:GetService("Players").LocalPlayer
-local chr=plyr.Character or plyr.CharacterAdded:Wait()
-local root=chr:WaitForChild("HumanoidRootPart")
-local AirWalkPart=Instance.new("Part")
-AirWalkPart.Size=Vector3.new(7,1,3)
-AirWalkPart.Transparency=1
-AirWalkPart.Anchored=true
-AirWalkPart.CanCollide=true
-AirWalkPart.Name="Fuck gravity to the moon we go"
-AirWalkPart.Parent=workspace
-game:GetService("RunService").RenderStepped:Connect(function()
-AirWalkPart.CFrame=root.CFrame*CFrame.new(0,-4,0)
-end)
-end
-commandHandlers.uninfjump=function(args)
-for i,v in pairs(workspace:GetChildren())do
-if tostring(v)=="Fuck gravity to the moon we go"then
-v:Destroy()
-end
-end
-end
-commandHandlers.lay=function(args)
-local layPlr=Players.LocalPlayer
-local layChar=layPlr.Character or layPlr.CharacterAdded:Wait()
-local layHum=layChar:WaitForChild("Humanoid")
-local layHrp=layChar:WaitForChild("HumanoidRootPart")
-local laying=true
-local layResult=workspace:Raycast(layHrp.Position,Vector3.new(0,-20,0),RaycastParams.new())
-if layResult then
-local groundY=layResult.Position.Y
-local hrpY=layHrp.Size.Y/2
-layHrp.CFrame=CFrame.new(layHrp.Position.X,groundY+hrpY+0.05,layHrp.Position.Z)*CFrame.Angles(math.rad(90),0,0)
-end
-layHum.PlatformStand=true
-game:GetService("UserInputService").InputBegan:Connect(function(input,gpe)
-if laying and not gpe and (input.UserInputType==Enum.UserInputType.Touch or input.KeyCode==Enum.KeyCode.Space)then laying=false end end)
-task.spawn(function()
-while laying do if not layHum.PlatformStand then layHum.PlatformStand=true end task.wait()end
-layHum.PlatformStand=false end)
-end
-commandHandlers.partcontrol=function(args)
-local RunService=game:GetService("RunService")
-local h=game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-local cam=workspace.CurrentCamera
-local pc=game.Players.LocalPlayer.Character
-game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(15)
-game.Players.LocalPlayer.SimulationRadius=1000
-wait(game.Players.RespawnTime+0.5)
-game.Players.LocalPlayer.SimulationRadius=1000
-game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame=h
-workspace.CurrentCamera=cam
-task.wait(0.2)
-local function NetworkCheck(Part)
-return Part.ReceiveAge==0
-end
-local foundpart=nil
-for _,v in ipairs(workspace:GetDescendants())do
-pcall(function()
-if not v.Anchored and #v:GetConnectedParts()<=1 and NetworkCheck(v)==true then
-foundpart=v
-end
-end)
-end
-if foundpart then
-pc:WaitForChild("Animate"):Destroy()
-foundpart.CFrame=pc:GetPivot()
-if NetworkCheck(foundpart)==true then
-pcall(function()
-task.spawn(function()
-while task.wait(3)do
-foundpart.Velocity=Vector3.new(14.46262424,14.46262424,14.46262424)+Vector3.new(0,math.cos(tick()*10)/100,0)
-pc:PivotTo(foundpart.CFrame)
-workspace.CurrentCamera.CameraSubject=pc:FindFirstChildOfClass("Humanoid")
-end
-end)
-end)
-RunService.Heartbeat:Connect(function()
-local InAttack=false
-pcall(function()
-for _,v in ipairs(game:GetService("Players"):GetPlayers())do
-if v~=game.Players.LocalPlayer then
-local part=Instance.new("Part",workspace)
-part.Anchored=true
-part.Size=Vector3.new(v.SimulationRadius,v.SimulationRadius,v.SimulationRadius)
-part.Color=Color3.new(1,0,0)
-part.Transparency=0.99
-part.CanCollide=false
-part.CastShadow=false
-part.CFrame=v.Character:GetPivot()
-game:GetService("Debris"):AddItem(part,0.1)
-if(pc.Head.Position-v.Character.Head.Position).Magnitude<=18 then
-InAttack=true
-end
-local part=Instance.new("Part",workspace)
-part.Anchored=true
-part.Size=Vector3.new(27,27,27)
-part.Color=Color3.new(0,0,1)
-part.Transparency=0.77
-part.CanCollide=false
-part.CastShadow=false
-part.CFrame=v.Character:GetPivot()
-game:GetService("Debris"):AddItem(part,0.05)
-end
-end
-workspace.Gravity=0
-workspace.FallenPartsDestroyHeight=-9999999
-foundpart.Velocity=Vector3.zero
-foundpart.CanCollide=false
-local oldpos=foundpart.Position
-foundpart.CFrame=CFrame.lookAt(oldpos,workspace.CurrentCamera.CFrame*CFrame.new(0,0,-250).Position)
-if NetworkCheck(foundpart)==true then
-foundpart.Velocity=Vector3.zero
-workspace.CurrentCamera.CameraSubject=foundpart
-if InAttack==false then
-pc:PivotTo(CFrame.new(foundpart.Position.X,foundpart.Position.Y-12,foundpart.Position.Z))
 else
-pc:PivotTo(CFrame.new(foundpart.Position.X,foundpart.Position.Y,foundpart.Position.Z))
-end
-local controlModule=require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule"))
-local direction=controlModule:GetMoveVector()
-if direction.X>0 then
-foundpart.CFrame*=CFrame.new(1,0,0)
-end
-if direction.X<0 then
-foundpart.CFrame*=CFrame.new(-1,0,0)
-end
-if direction.Y>0 then
-foundpart.CFrame*=CFrame.new(0,1,0)
-end
-if direction.Y<0 then
-foundpart.CFrame*=CFrame.new(0,-1,0)
-end
-if direction.Z>0 then
-foundpart.CFrame*=CFrame.new(0,0,1)
-end
-if direction.Z<0 then
-foundpart.CFrame*=CFrame.new(0,0,-1)
+setFlingPos(basePart, CFrame.new(0, 1.5, tHumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, -1.5, -tHumanoid.WalkSpeed), CFrame.Angles(0, 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, 1.5, tHumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, 1.5, tRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(math.rad(90), 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, -1.5, -tRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(0, 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, 1.5, tRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(math.rad(90), 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, -1.5, 0), CFrame.Angles(math.rad(90), 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, -1.5, 0), CFrame.Angles(math.rad(-90), 0, 0))
+task.wait()
+setFlingPos(basePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
+task.wait()
 end
 else
-foundpart.Velocity=Vector3.new(14.46262424,14.46262424,14.46262424)+Vector3.new(0,math.cos(tick()*10)/100,0)
-pc:PivotTo(foundpart.CFrame)
-workspace.CurrentCamera.CameraSubject=pc:FindFirstChildOfClass("Humanoid")
+break
 end
-end)
-end)
+until basePart.Velocity.Magnitude > 500 or basePart.Parent ~= tChar or targetPlayer.Parent ~= Players or not targetPlayer.Character == tChar or tRootPart:IsGrounded() or humanoid.Health <= 0 or tick() > startTick + waitTime
+end
+savedFPDH = workspace.FallenPartsDestroyHeight
+workspace.FallenPartsDestroyHeight = 0/0
+local bodyVel = Instance.new("BodyVelocity")
+bodyVel.Name = "DheliriumVel"
+bodyVel.Parent = rootPart
+bodyVel.Velocity = Vector3.new(9e8, 9e8, 9e8)
+bodyVel.MaxForce = Vector3.new(1/0, 1/0, 1/0)
+humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+if tRootPart and tHead then
+if (tRootPart.CFrame.Position - tHead.CFrame.Position).Magnitude > 5 then
+flingBasePart(tHead)
 else
-warn("Found part lost network ownership, cannot control.")
+flingBasePart(tRootPart)
 end
+elseif tRootPart and not tHead then
+flingBasePart(tRootPart)
+elseif not tRootPart and tHead then
+flingBasePart(tHead)
+elseif not tRootPart and not tHead and accessory and handle then
+flingBasePart(handle)
 else
-warn("No usable networked part found.")
+return
+end
+bodyVel:Destroy()
+humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+workspace.CurrentCamera.CameraSubject = humanoid
+repeat
+rootPart.CFrame = oldPos * CFrame.new(0, 0.5, 0)
+character:PivotTo(oldPos * CFrame.new(0, 0.5, 0))
+humanoid:ChangeState("GettingUp")
+for _, part in ipairs(character:GetChildren()) do
+if part:IsA("BasePart") then
+part.Velocity, part.RotVelocity = Vector3.new(), Vector3.new()
 end
 end
-commandHandlers.gettools=function(args)
-for _, v in ipairs(workspace:GetDescendants()) do
-if v:IsA("Tool") or v:IsA("BackpackItem") then
-v.Parent = game.Players.LocalPlayer.Backpack
+task.wait()
+until (rootPart.Position - oldPos.Position).Magnitude < 25
+workspace.FallenPartsDestroyHeight = savedFPDH
 end
 end
-end
-commandHandlers.rdestroy=function(args)
-for _, v in ipairs(workspace:GetChildren()) do
-if v.ClassName ~= "Terrain" and v.ClassName ~= "Camera" then
-RemoteDestroy(v)
-end
-end
-end
-commandHandlers.fproxy=function(args)
-local fti = 0
-for _, v in ipairs(game:GetDescendants()) do
-if v:IsA("ProximityPrompt") then
-fti += 1
-pcall(function()
-fireproximityprompt(v)
-end)
-end
-end
-end
-commandHandlers.speed=function(args)
-local spdVal=tonumber(args[2])
-if spdVal then
-spdVal=math.clamp(spdVal,1,1000)
-local spdChar=LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-local spdHum=spdChar:FindFirstChildOfClass("Humanoid")
-if spdHum then spdHum.WalkSpeed=spdVal end
-end
-end
-commandHandlers.remotespy=function(args)
-loadstring(game:HttpGet('https://raw.githubusercontent.com/exxtremestuffs/SimpleSpySource/raw/master/SimpleSpy.lua'))()
-end
-commandHandlers.dex=function(args)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))()
-end
-commandHandlers.chatadmin=function(args)
-loadstring(game:HttpGet('https://pastebin.com/raw/jbSTm9kH'))()
-end
-commandHandlers.deltak=function(args)
-loadstring(game:HttpGet('https://raw.githubusercontent.com/Dhelann/DeltaMobileKeyboard/main/deltakeyboard.lua'))()
-end
-commandHandlers.reset=function(args)
-local rstChar=LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-rstChar:BreakJoints()
-end
-commandHandlers.rejoin=function(args)
-TeleportService:TeleportToPlaceInstance(game.PlaceId,game.JobId,LocalPlayer)
-end
-commandHandlers.serverhop=function(args)
-local dheliriumSrv=game:HttpGet("https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?limit=100")
-for _,v in pairs(HttpService:JSONDecode(dheliriumSrv).data)do
-if v.playing<v.maxPlayers and v.id~=game.JobId then
-TeleportService:TeleportToPlaceInstance(game.PlaceId,v.id,LocalPlayer)
-break end end
-end
-commandHandlers.goto=function(args)
-local tgtName=args[2]
-if tgtName then
-local function findTgt(name)
-name=name:lower()
-for _,p in ipairs(Players:GetPlayers())do
-if p~=LocalPlayer then
-local uname=p.Name:lower()
-local dname=p.DisplayName:lower()
-if uname:find(name)or dname:find(name)then return p end end end
-return nil
-end
-local tgt=findTgt(tgtName)
-if tgt and tgt.Character and tgt.Character:FindFirstChild("HumanoidRootPart")then
-local hrp=LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-if hrp then hrp.CFrame=tgt.Character.HumanoidRootPart.CFrame+Vector3.new(0,3,0)end end end
-end
-commandHandlers.antifling=function(args)
-local afChar=LocalPlayer.Character
-if afChar then
-for _,v in pairs(afChar:GetDescendants())do
-if v:IsA("BasePart")and v.Name~="HumanoidRootPart"then v.CustomPhysicalProperties=PhysicalProperties.new(0,0,0)end end
-end
-end
-commandHandlers.unantifling=function(args)
-local uafChar=LocalPlayer.Character
-if uafChar then
-for _,v in pairs(uafChar:GetDescendants())do
-if v:IsA("BasePart")and v.Name~="HumanoidRootPart"then v.CustomPhysicalProperties=PhysicalProperties.new(1,0.3,0.5)end end
-end
-end
-commandHandlers.sit=function(args)
-local sitPlr=Players.LocalPlayer
-local sitChar=sitPlr.Character or sitPlr.CharacterAdded:Wait()
-local sitHum=sitChar:WaitForChild("Humanoid")
-sitHum.Sit=true
-local sitting=true
-sitHum.StateChanged:Connect(function(_,new)
-if sitting and new==Enum.HumanoidStateType.Jumping then sitting=false end end)
-task.spawn(function()
-while sitting and sitHum and sitHum.Parent do
-if not sitHum.Sit then sitHum.Sit=true end task.wait(0.1)end end)
-end
-commandHandlers.leave=function(args)
-pcall(function()
-game:Shutdown()
-end)
-pcall(function()
-game.Players.LocalPlayer:Kick("Force quit.")
-end)
-end
-commandHandlers.godmode=function(args)
-local gmChar=LocalPlayer.Character
-if gmChar then
-for _,v in pairs(gmChar:GetDescendants())do
-if v:IsA("BasePart")then v.Anchored=false v.CanCollide=true v.Massless=false end end
-gmChar:BreakJoints()
-end
-end
-commandHandlers.fireremotes=function(args)
-local remotesList={}
-for _,obj in ipairs(game:GetDescendants())do
-if obj:IsA("RemoteEvent")or obj:IsA("RemoteFunction")then table.insert(remotesList,obj)end end
-for _,remote in ipairs(remotesList)do
-pcall(function()
-if remote:IsA("RemoteEvent")then remote:FireServer()elseif remote:IsA("RemoteFunction")then remote:InvokeServer()end end)end
-end
-commandHandlers.firetouchinterests=function(args)
-local ftChar=LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-local ftHrp=ftChar and ftChar:FindFirstChild("HumanoidRootPart")
-if ftHrp and firetouchinterest then
-for _,part in ipairs(workspace:GetDescendants())do
-if part:IsA("BasePart")and part:FindFirstChildWhichIsA("TouchTransmitter")then
-firetouchinterest(ftHrp,part,0)
-firetouchinterest(ftHrp,part,1)end end end
-end
-commandHandlers.hitbox=function(args)
-local size=tonumber(args[2])or 10
-for _,player in ipairs(Players:GetPlayers())do
-if player~=LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart")then
-local hrp=player.Character.HumanoidRootPart
-hrp.Size=Vector3.new(size,size,size)
-hrp.Transparency=0.7
-hrp.BrickColor=BrickColor.new("Really red")
-hrp.Material=Enum.Material.Neon
-hrp.CanCollide=false end end
-end
-commandHandlers.spin=function(args)
-local spd=tonumber(args[2])or 10
-local spinChar=LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-local spinHrp=spinChar:FindFirstChild("HumanoidRootPart")
-if spinHrp then spawn(function()
-while wait()do spinHrp.CFrame=spinHrp.CFrame*CFrame.Angles(0,math.rad(spd),0)end end)end
-end
-commandHandlers.view=function(args)
-local viewName=args[2]
-for _,p in ipairs(Players:GetPlayers())do
-if p~=LocalPlayer and p.Name:lower():find(viewName:lower())then
-workspace.CurrentCamera.CameraSubject=p.Character and p.Character:FindFirstChild("Humanoid")end end
-end
-commandHandlers.fixcam=function(args)workspace.CurrentCamera.CameraSubject=LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")end
-commandHandlers.fullbright=function(args)Lighting.Brightness=10 Lighting.ClockTime=12 Lighting.FogEnd=1e10 Lighting.GlobalShadows=false Lighting.OutdoorAmbient=Color3.new(1,1,1)end
-commandHandlers.unfullbright=function(args)Lighting.Brightness=2 Lighting.ClockTime=14 Lighting.FogEnd=1000 Lighting.GlobalShadows=true Lighting.OutdoorAmbient=Color3.fromRGB(128,128,128)end
-commandHandlers.esp=function(args)getgenv().DheliriumESP()end
-commandHandlers.unesp=function(args)getgenv().unDheliriumESP()end
-commandHandlers.antiafk=function(args)for _,v in pairs(getconnections(Players.LocalPlayer.Idled))do v:Disable()end end
-commandHandlers.fling=function(args)
-local player=args[2]
-local function findTgt(name)
-name=name:lower()
-for _,p in ipairs(Players:GetPlayers())do
-if p~=LocalPlayer then
-local uname=p.Name:lower()
-local dname=p.DisplayName:lower()
-if uname:find(name)or dname:find(name)then return p end end end
-return nil
-end
-local tgt=findTgt(player)
-if tgt and tgt.Character and tgt.Character:FindFirstChild("HumanoidRootPart")then
-local hrp=LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-local thrp=tgt.Character.HumanoidRootPart
-if hrp and thrp then
-hrp.CFrame=thrp.CFrame* CFrame.new(0,0,5)
-wait()
-for i=1,35 do
-hrp.Velocity=(thrp.Position-hrp.Position).Unit*150
-game:GetService("RunService").Heartbeat:Wait()
+commandHandlers.fling = function(args)
+local tgtName = args[2]
+if not tgtName then return end
+tgtName = tgtName:lower()
+for _, player in ipairs(Players:GetPlayers()) do
+if player ~= LocalPlayer then
+local uname = player.Name:lower()
+local dname = player.DisplayName:lower()
+if uname:find(tgtName) or dname:find(tgtName) then
+dheliriumFling(player)
+break
 end
 end
 end
