@@ -1,0 +1,12 @@
+local state=dheliriumFlyStates and dheliriumFlyStates.fly
+if state and state.active then
+state.active=false
+if state.bv then state.bv:Destroy() state.bv=nil end
+if state.bg then state.bg:Destroy() state.bg=nil end
+if state.renderConn then state.renderConn:Disconnect() state.renderConn=nil end
+if state.conn1 then state.conn1:Disconnect() state.conn1=nil end
+if state.conn2 then state.conn2:Disconnect() state.conn2=nil end
+local lp=game:GetService("Players").LocalPlayer
+local hum=lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
+if hum then hum.PlatformStand=false end
+end
