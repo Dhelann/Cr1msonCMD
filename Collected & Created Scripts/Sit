@@ -1,0 +1,11 @@
+local sitPlr=Players.LocalPlayer
+local sitChar=sitPlr.Character or sitPlr.CharacterAdded:Wait()
+local sitHum=sitChar:WaitForChild("Humanoid")
+sitHum.Sit=true
+local sitting=true
+sitHum.StateChanged:Connect(function(_,new)
+if sitting and new==Enum.HumanoidStateType.Jumping then sitting=false end end)
+task.spawn(function()
+while sitting and sitHum and sitHum.Parent do
+if not sitHum.Sit then sitHum.Sit=true end task.wait(0.1)end end)
+end
