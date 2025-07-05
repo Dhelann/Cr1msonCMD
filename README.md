@@ -4,14 +4,16 @@
 
 <h1 align="center">Welcome to My Stupid Repository ❤</h1>
 
-**This repository** is your gateway to an **Exploit Wonderland** (or **Hellscape**, depending on how you see it).
+**This repository** is your gateway to an **Exploit Wonderland** — or a **Digital Hellscape**, depending on your mental stability.
 
-Here you'll find all kinds of *verified*, *tested*, *stupid*, *broken*, or *surprisingly useful* exploits — scavenged, or summoned straight from the depths of my brain by me, **Dhelan**. 
+Inside, you’ll find all kinds of *stupid*, *broken*, and some *useful* scripts — Authored and blessed (or cursed) by me, **Dhelan**.
 
-Messing with this stuff might just launch your neurons into a weird-ass zone I like to call... **DHElirium**.  
-(*Dhelan + Delirium... get it? No? Fine.*)
+Tread lightly, 'cause diving into this stuff might just scramble your neurons into a realm I lovingly call...  
+**DHElirium**.  
+(*Dhelan + Delirium... get it? No? Whatever.*)
 
 ---
 
-So go ahead. Scroll through this mess of scripts, glitches, cursed utilities, and brain-melting randomness.  
-They might not fix your problems, but they’ll definitely *make them weirder*. Have fun and good luck, traveler ❤
+Scroll through this glorious mess of exploits, glitches, cursed tools, and brain-melting randomness.  
+They might not solve your problems — but they’ll absolutely *give you new ones*.  
+Have fun and good luck, traveler ❤
