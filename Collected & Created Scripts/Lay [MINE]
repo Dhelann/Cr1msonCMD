@@ -1,0 +1,17 @@
+local layPlr=Players.LocalPlayer
+local layChar=layPlr.Character or layPlr.CharacterAdded:Wait()
+local layHum=layChar:WaitForChild("Humanoid")
+local layHrp=layChar:WaitForChild("HumanoidRootPart")
+local laying=true
+local layResult=workspace:Raycast(layHrp.Position,Vector3.new(0,-20,0),RaycastParams.new())
+if layResult then
+local groundY=layResult.Position.Y
+local hrpY=layHrp.Size.Y/2
+layHrp.CFrame=CFrame.new(layHrp.Position.X,groundY+hrpY+0.05,layHrp.Position.Z)*CFrame.Angles(math.rad(90),0,0)
+end
+layHum.PlatformStand=true
+game:GetService("UserInputService").InputBegan:Connect(function(input,gpe)
+if laying and not gpe and (input.UserInputType==Enum.UserInputType.Touch or input.KeyCode==Enum.KeyCode.Space)then laying=false end end)
+task.spawn(function()
+while laying do if not layHum.PlatformStand then layHum.PlatformStand=true end task.wait()end
+layHum.PlatformStand=false end)
