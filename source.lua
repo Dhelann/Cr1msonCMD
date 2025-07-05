@@ -84,6 +84,7 @@ local C={
 "fireremote - fires all remote events",
 "infjump - lets you jump infinitely",
 "uninfjump - disables inf jump",
+"deltak - get Delta keyboard",
 "--- More Commands Soon ---"
 }
 for _,v in ipairs(C)do
@@ -298,6 +299,7 @@ end
 commandHandlers.remotespy=function(args)local function dheliriumFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end dheliriumFetch("https://raw.githubusercontent.com/Upbolt/RemoteSpy/main/Main.lua")end
 commandHandlers.dex=function(args)local function dheliriumFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end dheliriumFetch("https://raw.githubusercontent.com/peyton2465/Dex/master/out.lua")end
 commandHandlers.chatadmin=function(args)local function dheliriumFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end dheliriumFetch("https://raw.githubusercontent.com/Dhelann/chat-admin/main/source")end
+commandHandlers.deltak=function(args)local function dheliriumFetch(url)local s,r=pcall(function()return game:HttpGet(url)end)if s and r then pcall(function()loadstring(r)()end)end end dheliriumFetch("https://raw.githubusercontent.com/Dhelann/Dhelirium/refs/heads/main/deltakeyboard")end
 commandHandlers.reset=function(args)
 local rstChar=LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 rstChar:BreakJoints()
