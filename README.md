@@ -27,7 +27,7 @@
 
 <p align="center">
 Found a bug or got a cool idea?<br>
-→ <a href="https://github.com/Dhelann/Dhelirium/issues/new/choose">Open an issue here</a>
+→ <a href="https://github.com/Dhelann/Reports/issues/new/choose">Open an issue here</a>
 </p>
 
 <hr>
