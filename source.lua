@@ -84,6 +84,10 @@ local C={
 "infjump - lets you jump infinitely",
 "uninfjump - disables inf jump",
 "deltak - get Delta keyboard",
+"partcontrol - Control Parts",
+"rdestroy - if found remote, destroy",
+"gettools - get all tools", 
+"fproxy - fire all proximityprompt",
 "--- More Commands Soon ---"
 }
 for _,v in ipairs(C)do
@@ -285,6 +289,145 @@ if laying and not gpe and (input.UserInputType==Enum.UserInputType.Touch or inpu
 task.spawn(function()
 while laying do if not layHum.PlatformStand then layHum.PlatformStand=true end task.wait()end
 layHum.PlatformStand=false end)
+end
+commandHandlers.partcontrol=function(args)
+local RunService=game:GetService("RunService")
+local h=game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+local cam=workspace.CurrentCamera
+local pc=game.Players.LocalPlayer.Character
+game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(15)
+game.Players.LocalPlayer.SimulationRadius=1000
+wait(game.Players.RespawnTime+0.5)
+game.Players.LocalPlayer.SimulationRadius=1000
+game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame=h
+workspace.CurrentCamera=cam
+task.wait(0.2)
+local function NetworkCheck(Part)
+return Part.ReceiveAge==0
+end
+local foundpart=nil
+for _,v in ipairs(workspace:GetDescendants())do
+pcall(function()
+if not v.Anchored and #v:GetConnectedParts()<=1 and NetworkCheck(v)==true then
+foundpart=v
+end
+end)
+end
+if foundpart then
+pc:WaitForChild("Animate"):Destroy()
+notify("Controllable part was found, rejoin to end this command.","TERMINAL")
+foundpart.CFrame=pc:GetPivot()
+if NetworkCheck(foundpart)==true then
+pcall(function()
+task.spawn(function()
+while task.wait(3)do
+foundpart.Velocity=Vector3.new(14.46262424,14.46262424,14.46262424)+Vector3.new(0,math.cos(tick()*10)/100,0)
+pc:PivotTo(foundpart.CFrame)
+workspace.CurrentCamera.CameraSubject=pc:FindFirstChildOfClass("Humanoid")
+end
+end)
+end)
+RunService.Heartbeat:Connect(function()
+local InAttack=false
+pcall(function()
+for _,v in ipairs(game:GetService("Players"):GetPlayers())do
+if v~=game.Players.LocalPlayer then
+local part=Instance.new("Part",workspace)
+part.Anchored=true
+part.Size=Vector3.new(v.SimulationRadius,v.SimulationRadius,v.SimulationRadius)
+part.Color=Color3.new(1,0,0)
+part.Transparency=0.99
+part.CanCollide=false
+part.CastShadow=false
+part.CFrame=v.Character:GetPivot()
+game:GetService("Debris"):AddItem(part,0.1)
+if(pc.Head.Position-v.Character.Head.Position).Magnitude<=18 then
+InAttack=true
+end
+local part=Instance.new("Part",workspace)
+part.Anchored=true
+part.Size=Vector3.new(27,27,27)
+part.Color=Color3.new(0,0,1)
+part.Transparency=0.77
+part.CanCollide=false
+part.CastShadow=false
+part.CFrame=v.Character:GetPivot()
+game:GetService("Debris"):AddItem(part,0.05)
+end
+end
+workspace.Gravity=0
+workspace.FallenPartsDestroyHeight=-9999999
+foundpart.Velocity=Vector3.zero
+foundpart.CanCollide=false
+local oldpos=foundpart.Position
+foundpart.CFrame=CFrame.lookAt(oldpos,workspace.CurrentCamera.CFrame*CFrame.new(0,0,-250).Position)
+if NetworkCheck(foundpart)==true then
+foundpart.Velocity=Vector3.zero
+workspace.CurrentCamera.CameraSubject=foundpart
+if InAttack==false then
+pc:PivotTo(CFrame.new(foundpart.Position.X,foundpart.Position.Y-12,foundpart.Position.Z))
+else
+pc:PivotTo(CFrame.new(foundpart.Position.X,foundpart.Position.Y,foundpart.Position.Z))
+end
+local controlModule=require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule"))
+local direction=controlModule:GetMoveVector()
+if direction.X>0 then
+foundpart.CFrame*=CFrame.new(1,0,0)
+end
+if direction.X<0 then
+foundpart.CFrame*=CFrame.new(-1,0,0)
+end
+if direction.Y>0 then
+foundpart.CFrame*=CFrame.new(0,1,0)
+end
+if direction.Y<0 then
+foundpart.CFrame*=CFrame.new(0,-1,0)
+end
+if direction.Z>0 then
+foundpart.CFrame*=CFrame.new(0,0,1)
+end
+if direction.Z<0 then
+foundpart.CFrame*=CFrame.new(0,0,-1)
+end
+else
+foundpart.Velocity=Vector3.new(14.46262424,14.46262424,14.46262424)+Vector3.new(0,math.cos(tick()*10)/100,0)
+pc:PivotTo(foundpart.CFrame)
+workspace.CurrentCamera.CameraSubject=pc:FindFirstChildOfClass("Humanoid")
+end
+end)
+end)
+else
+warn("Found part lost network ownership, cannot control.")
+end
+else
+warn("No usable networked part found.")
+end
+end
+commandHandlers.gettools=function(args)
+for _, v in ipairs(workspace:GetDescendants()) do
+if v:IsA("Tool") or v:IsA("BackpackItem") then
+v.Parent = game.Players.LocalPlayer.Backpack
+end
+end
+end
+end
+commandHandlers.rdestroy=function(args)
+for _, v in ipairs(workspace:GetChildren()) do
+if v.ClassName ~= "Terrain" and v.ClassName ~= "Camera" then
+RemoteDestroy(v)
+end
+end
+end
+commandHandlers.fproxy=function(args)
+local fti = 0
+for _, v in ipairs(game:GetDescendants()) do
+if v:IsA("ProximityPrompt") then
+fti += 1
+pcall(function()
+fireproximityprompt(v)
+end)
+end
+end
 end
 commandHandlers.speed=function(args)
 local spdVal=tonumber(args[2])
