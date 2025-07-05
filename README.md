@@ -2,7 +2,7 @@
   <img src="https://i.imgur.com/mtV5xSj.jpeg" alt="DHElirium" width="200">
 </p>
 
-<h1 align="center">Welcome to My Stupid Repository ❤</h1>
+<h1 align="center">Welcome to my Repository ❤</h1>
 
 **This repository** is your gateway to an **Exploit Wonderland** — or a **Digital Hellscape**, depending on your mental stability.
 
