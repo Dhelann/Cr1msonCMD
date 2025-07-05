@@ -36,7 +36,7 @@ Found a bug or got a cool idea?<br>
 
 <p align="center">
 📜 <a href="https://scriptblox.com/script/Universal-Script-Console-X-41895">ScriptBlox</a><br>
-🚀 <a href="#">RScripts</a><br>
+🚀 <a href="https://rscripts.net/script/dhelirium-fe-admin-free-all-games-and-executor-Eleu">RScripts</a><br>
 </p>
 
 <hr>
