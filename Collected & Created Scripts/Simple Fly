@@ -1,0 +1,68 @@
+local Players=game:GetService("Players")
+local RunService=game:GetService("RunService")
+local UIS=game:GetService("UserInputService")
+local dheliriumFlyStates={}
+local SPEED=1
+
+local state={active=true,bg=nil,bv=nil,renderConn=nil,conn1=nil,conn2=nil}
+dheliriumFlyStates.fly=state
+
+local lp=Players.LocalPlayer
+local cam=workspace.CurrentCamera
+local root=lp.Character and (lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso"))
+if not root then repeat task.wait() until lp.Character and (lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso")) root=lp.Character:FindFirstChild("HumanoidRootPart")or lp.Character:FindFirstChild("UpperTorso")or lp.Character:FindFirstChild("Torso")end
+
+state.bg=Instance.new("BodyGyro",root)
+state.bg.P=9e4
+state.bg.MaxTorque=Vector3.new(9e9,9e9,9e9)
+state.bg.CFrame=root.CFrame
+
+state.bv=Instance.new("BodyVelocity",root)
+state.bv.Velocity=Vector3.zero
+state.bv.MaxForce=Vector3.new(9e9,9e9,9e9)
+
+local control={F=0,B=0,L=0,R=0,Q=0,E=0}
+
+state.conn1=UIS.InputBegan:Connect(function(input,gpe)
+if gpe then return end
+if input.KeyCode==Enum.KeyCode.W then control.F=SPEED end
+if input.KeyCode==Enum.KeyCode.S then control.B=-SPEED end
+if input.KeyCode==Enum.KeyCode.A then control.L=-SPEED end
+if input.KeyCode==Enum.KeyCode.D then control.R=SPEED end
+if input.KeyCode==Enum.KeyCode.Q then control.E=-SPEED*2 end
+if input.KeyCode==Enum.KeyCode.E then control.Q=SPEED*2 end
+end)
+
+state.conn2=UIS.InputEnded:Connect(function(input)
+if input.KeyCode==Enum.KeyCode.W then control.F=0 end
+if input.KeyCode==Enum.KeyCode.S then control.B=0 end
+if input.KeyCode==Enum.KeyCode.A then control.L=0 end
+if input.KeyCode==Enum.KeyCode.D then control.R=0 end
+if input.KeyCode==Enum.KeyCode.Q then control.E=0 end
+if input.KeyCode==Enum.KeyCode.E then control.Q=0 end
+end)
+
+local ctrlMod
+pcall(function()
+ctrlMod=require(lp.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule"))
+end)
+
+state.renderConn=RunService.RenderStepped:Connect(function()
+if not state.active then return end
+local moveVec=Vector3.zero
+if ctrlMod then moveVec=ctrlMod:GetMoveVector()end
+local joyDir=Vector3.zero
+if moveVec.Magnitude>0 then joyDir=cam.CFrame.RightVector*moveVec.X+cam.CFrame.LookVector*-moveVec.Z end
+local keyDir=Vector3.zero
+keyDir=keyDir+cam.CFrame.LookVector*(control.F+control.B)
+keyDir=keyDir+cam.CFrame.RightVector*(control.L+control.R)
+keyDir=keyDir+cam.CFrame.UpVector*((control.Q+control.E)*0.5)
+local dir=joyDir+keyDir
+local mag=dir.Magnitude
+local flySpeed=(mag>0)and 50 or 0
+if mag>0 then dir=dir.Unit end
+state.bv.Velocity=dir*flySpeed
+state.bg.CFrame=cam.CFrame
+local hum=lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
+if hum then hum.PlatformStand=state.active end
+end)
