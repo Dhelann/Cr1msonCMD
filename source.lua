@@ -197,7 +197,14 @@ task.spawn(function()
 while sitting and sitHum and sitHum.Parent do
 if not sitHum.Sit then sitHum.Sit=true end task.wait(0.1)end end)
 end
-commandHandlers.leave=function(args)Players.LocalPlayer:Kick("Cr1m Face has kicked you.")end
+commandHandlers.leave=function(args)
+pcall(function()
+game:Shutdown()
+end)
+pcall(function()
+game.Players.LocalPlayer:Kick("Force quit.")
+end)
+end
 commandHandlers.godmode=function(args)
 local gmChar=LocalPlayer.Character
 if gmChar then
@@ -233,19 +240,6 @@ hrp.Transparency=0.7
 hrp.BrickColor=BrickColor.new("Really red")
 hrp.Material=Enum.Material.Neon
 hrp.CanCollide=false end end
-end
-commandHandlers.noclip=function(args)
-if dheliriumNoclipConn then dheliriumNoclipConn:Disconnect()dheliriumNoclipConn=nil end
-dheliriumNoclipConn=RunService.Stepped:Connect(function()
-if LocalPlayer.Character then
-for _,v in pairs(LocalPlayer.Character:GetDescendants())do
-if v:IsA("BasePart")then v.CanCollide=false end end end end)
-end
-commandHandlers.clip=function(args)
-if dheliriumNoclipConn then dheliriumNoclipConn:Disconnect()dheliriumNoclipConn=nil end
-if LocalPlayer.Character then
-for _,v in pairs(LocalPlayer.Character:GetDescendants())do
-if v:IsA("BasePart")then v.CanCollide=true end end end
 end
 commandHandlers.spin=function(args)
 local spd=tonumber(args[2])or 10
