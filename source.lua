@@ -84,6 +84,7 @@ local C={
 "infjump - lets you jump infinitely",
 "uninfjump - disables inf jump",
 "deltak - get Delta keyboard",
+"thirdp - enable Third-Person",
 "--- More Commands Soon ---"
 }
 for _,v in ipairs(C)do
@@ -266,6 +267,12 @@ if tostring(v)=="Fuck gravity to the moon we go"then
 v:Destroy()
 end
 end
+end
+commandHandlers.thirdp=function(args)
+local player = game:GetService("Players").LocalPlayer
+local camera = workspace.CurrentCamera
+camera.CameraType = Enum.CameraType.Custom
+player.CameraMode = Enum.CameraMode.Classic
 end
 commandHandlers.lay=function(args)
 local layPlr=Players.LocalPlayer
