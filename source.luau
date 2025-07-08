@@ -85,6 +85,7 @@ local C={
 "uninfjump - disables inf jump",
 "deltak - get Delta keyboard",
 "thirdp - enable Third-Person",
+"punchtool - get a punchtool",
 "--- More Commands Soon ---"
 }
 for _,v in ipairs(C)do
@@ -245,6 +246,9 @@ if state.conn2 then state.conn2:Disconnect()state.conn2=nil end
 local hum=LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
 if hum then hum.PlatformStand=false end
 end
+end
+commandHandlers.punchtool=function(args) 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Dhelann/Dhelirium/refs/heads/main/puncher.luau"))()
 end
 commandHandlers.infjump=function(args)
 local plyr=game:GetService("Players").LocalPlayer
