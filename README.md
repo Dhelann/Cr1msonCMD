@@ -1,5 +1,5 @@
 Uhhh, welcome to the repository of my admin script? 
 
->Add me on Discord and [Scriptblox](https://scriptblox.com/u/Dhelann) cuz idk
+>Follow me [@Discord](https://discord.com/users/1261962418716803084) and [@Scriptblox](https://scriptblox.com/u/Dhelann) (You can Dm me for Command Requests or Improvements) 
 
->Please like the Dhelirium Script in my Scriptblox account
+>Please consider liking the Dhelirium Script [@Scriptblox](https://scriptblox.com/u/Dhelann)
