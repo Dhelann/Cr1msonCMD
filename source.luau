@@ -86,7 +86,7 @@ local C={
 "deltak - get Delta keyboard",
 "thirdp - enable Third-Person",
 "punchtool - get a punch tool",
-"tptool - get a teleport tool",
+"flingtool - click a player to fling",
 "--- More Commands Soon ---"
 }
 for _,v in ipairs(C)do
@@ -273,7 +273,7 @@ v:Destroy()
 end
 end
 end
-commandHandlers.tptool=function(args)
+commandHandlers.flingtool=function(args)
 local Tool=Instance.new("Tool")
 Tool.Name="Fling"
 Tool.RequiresHandle=false
