@@ -22,7 +22,7 @@
     </a>
   </li>
   <li>
-    <a href="https://scriptblox.com/@Dhelann" target="_blank">
+    <a href="https://scriptblox.com/U/Dhelann" target="_blank">
       <img src="https://img.shields.io/badge/ScriptBlox-%40Dhelann-181717?logo=lua&logoColor=white" alt="ScriptBlox Shield">
     </a>
   </li>
