@@ -1,4 +1,5 @@
 if not _G.DHELIRIUM_LOADED then _G.DHELIRIUM_LOADED=true
+local clickflingConn
 if typeof(task)~="table"or not task.wait then task={}task.wait=wait task.spawn=function(f)coroutine.wrap(f)()end end
 local P=game:GetService("Players")
 local T=game:GetService("TweenService")
