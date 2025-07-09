@@ -88,6 +88,7 @@ local C={
 "thirdp - enable Third-Person",
 "punchtool - get a punchtool",
 "clickfling - click a player",
+"unclickfling - self explanatory",
 "--- More Commands Soon ---"
 }
 for _,v in ipairs(C)do
