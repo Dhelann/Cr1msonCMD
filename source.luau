@@ -87,8 +87,6 @@ local C={
 "deltak - get Delta keyboard",
 "thirdp - enable Third-Person",
 "punchtool - get a punchtool",
-"clickfling - click a player",
-"unclickfling - self explanatory",
 "--- More Commands Soon ---"
 }
 for _,v in ipairs(C)do
@@ -273,46 +271,6 @@ for i,v in pairs(workspace:GetChildren())do
 if tostring(v)=="Fuck gravity to the moon we go"then
 v:Destroy()
 end
-end
-end
-commandHandlers.clickfling = function(args)
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local Mouse = LocalPlayer:GetMouse()
-if clickflingConn then
-clickflingConn:Disconnect()
-clickflingConn = nil
-end
-clickflingConn = Mouse.Button1Down:Connect(function()
-local target = Mouse.Target
-if target and target.Parent and target.Parent:FindFirstChild("Humanoid") then
-local player = Players:GetPlayerFromCharacter(target.Parent)
-if player and player ~= LocalPlayer then
-if dheliriumFling then
-dheliriumFling(player)
-end
-end
-end
-end)
-pcall(function()
-game:GetService("StarterGui"):SetCore("SendNotification", {
-Title = "Clickfling",
-Text = "Click a player with your mouse to fling them. Run ;unclickfling to stop.",
-Duration = 5
-})
-end)
-end
-commandHandlers.unclickfling = function(args)
-if clickflingConn then
-clickflingConn:Disconnect()
-clickflingConn = nil
-pcall(function()
-game:GetService("StarterGui"):SetCore("SendNotification", {
-Title = "Clickfling",
-Text = "Clickfling disabled.",
-Duration = 3
-})
-end)
 end
 end
 commandHandlers.thirdp=function(args)
